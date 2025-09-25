@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "design-blocks/qa-block",
+	"title": "Блок Q&A",
+	"category": "design-blocks",
+	"icon": "editor-help",
+	"description": "Питання‑відповідь з анімованою стрілкою та акордеоном.",
+	"version": "0.1.0",
+	"keywords": ["faq", "q&a", "accordion"],
+	"supports": {
+		"html": false,
+		"spacing": {
+		"margin": true,
+		"padding": true
+		}
+	},
+	"attributes": {
+		"question": { "type": "string", "source": "html", "selector": ".qa-question" },
+		"answer":   { "type": "string", "source": "html", "selector": ".qa-answer" }
+	},
+	"editorScript": "file:./index.js",
+	"viewScript": "file:./frontend.js",
+	"style": "file:./style-index.css"
+}

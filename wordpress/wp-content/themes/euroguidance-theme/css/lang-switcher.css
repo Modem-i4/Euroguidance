@@ -1,0 +1,24 @@
+.trp-language-switcher.trp-shortcode-overlay {
+	background: transparent;
+    transition: 0.2s;
+}
+
+.trp-language-switcher.trp-shortcode-overlay.is-open, .trp-language-switcher.trp-shortcode-overlay.is-transitioning {
+	background: white;
+}
+
+.trp-language-switcher.trp-shortcode-anchor {
+	background: transparent;
+}
+
+
+.trp-shortcode-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  transform: rotate(0deg);
+}
+
+.trp-shortcode-switcher__wrapper:hover .trp-shortcode-arrow,
+.trp-shortcode-switcher__wrapper .trp-language-switcher.trp-shortcode-overlay.is-open .trp-shortcode-arrow {
+  transform: rotate(180deg);
+}

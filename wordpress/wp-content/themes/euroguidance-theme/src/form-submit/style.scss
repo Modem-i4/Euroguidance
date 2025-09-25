@@ -1,0 +1,33 @@
+.fc-submit {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  background: #8f8f92;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  z-index: 0;
+}
+
+.fc-submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(88deg, #C65094 0%, #4884C3 50%, #6C3088 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+.fc-submit.active::after {
+  opacity: 1;
+}
+
+.wp-block-parts-blocks-form-submit {
+  display: flex;
+  justify-content: center;
+}

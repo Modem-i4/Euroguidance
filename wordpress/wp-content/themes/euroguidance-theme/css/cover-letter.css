@@ -1,0 +1,14 @@
+@media (max-width: 781px) {
+	.cover-letter__hero-wrapper .bg-polygon.bg-polygon-square::after {
+		height: 17em;
+	}
+	.cover-letter__hero__image img {
+		max-height: 290px;
+		width: auto !important;
+	}
+
+	.cover-letter__hero__image {
+		display: flex;
+		justify-content: center;
+	}
+}

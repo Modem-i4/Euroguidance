@@ -1,0 +1,83 @@
+// ===== Runtime vars (CSS)
+:root {
+  --nav-outside: 96px;  // ширина жолоба зліва/справа
+  --nav-size:    48px;  // діаметр стрілок
+  --nav-gap:       8px; // відступ від краю контейнера до стрілки
+}
+
+/* ===== Slider container (жолоб під стрілки) */
+.swiper-container {
+  position: relative;
+  padding-inline: calc(var(--nav-outside) + var(--nav-gap));
+  overflow: visible; // нічого не обрізаємо
+}
+
+/* база позиціювання для стрілок */
+.news-slider.swiper {
+  position: relative;
+
+  .swiper-wrapper { align-items: stretch; padding: 25px 0; }
+  .swiper-slide   { height: auto; }
+}
+
+/* ===== Arrows (всередині жолоба) */
+.swiper-button-prev,
+.swiper-button-next {
+  position: absolute;
+  top: 50%;
+  width: var(--nav-size);
+  height: var(--nav-size);
+  border-radius: 50%;
+  background: #e5e5ea;
+  color: #575756;
+  box-shadow: 0 4px 6px 0 #00000040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transform: translateY(-50%);
+  transition: transform .1s ease;
+
+  &::after { font-size: 16px; font-weight: 700; }
+}
+.swiper-button-prev { left:  var(--nav-gap); }
+.swiper-button-next { right: var(--nav-gap); }
+
+/* ===== Pagination */
+.swiper-pagination {
+  position: static !important;
+  margin-top: 18px;
+  text-align: center;
+
+  .swiper-pagination-bullet {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #e5e5ea;
+    opacity: 1;
+    margin: 0 6px !important;
+    transition: transform .2s ease, background-color .2s ease;
+
+    &-active {
+      background: #d1d1d6;
+      transform: scale(1.25);
+    }
+  }
+}
+
+/* ===== Responsive тільки для слайдера */
+@media (max-width: 1024px) {
+  :root { --nav-outside: 20px; --nav-size: 44px; }
+}
+
+@media (max-width: 768px) {
+  :root { --nav-outside: 12px; --nav-size: 42px; }
+}
+
+@media (max-width: 480px) {
+  :root { --nav-outside: 8px; --nav-size: 36px; } // менше на телефоні
+  .swiper-button-prev,
+  .swiper-button-next {
+    box-shadow: none; // без тіні на телефоні
+  }
+}

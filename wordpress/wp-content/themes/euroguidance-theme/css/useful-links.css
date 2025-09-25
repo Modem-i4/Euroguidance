@@ -1,0 +1,56 @@
+div.useful-link-card {
+    border-radius: 20px;
+    overflow: hidden;
+    min-height: 240px;
+    min-width: 224px;
+    max-width: 300px;
+    margin: auto;
+    box-shadow: 0px 0px 6px 1px #00000040;
+    gap: 0;
+}
+
+.useful-link-card > figure {
+  height:120px;           /* фіксована висота зображення зверху */
+  width:100%;
+  object-fit:cover;       /* обрізає під контейнер */
+  display: flex;           /* flex-контейнер */
+  align-items: center;     /* вертикальне центрування */
+  justify-content: center; /* горизонтальне центрування */
+  flex:0 0 auto;
+  background-color: white;
+}
+.useful-link-card > figure > img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain; /* зберігає пропорції */
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.useful-link-card  .card-body{
+  flex:1 1 auto;          /* решта простору під текст */
+  padding:12px;
+}
+
+.search-block-wrapper {
+  width: 40%;
+  margin-right: auto;
+  margin-left: auto;
+}
+.useful-link-card {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.useful-link-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 8px 2px #00000040;
+}
+
+.search-block__input {
+  border-radius: 200px;
+}
+
+@media (max-width: 800px) {
+  .search-block-wrapper {
+      width: 100%;
+  }
+}

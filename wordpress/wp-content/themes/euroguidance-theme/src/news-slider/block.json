@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "design-blocks/news-slider",
+  "version": "0.1.0",
+  "title": "Слайдер новин",
+  "category": "design-blocks",
+  "icon": "slides",
+  "description": "Глобальний блок-слайдер для новин",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "postsToShow": {
+      "type": "number",
+      "default": 6
+    },
+    "slidesPerView": {
+      "type": "number",
+      "default": 3
+    },
+    "slidesGapPx": {
+      "type": "number",
+      "default": 25
+    },
+    "fallbackImage": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:./index.js",
+  "style": [ 
+    "file:./script.css",
+    "file:./style-index.css"
+  ], 
+  "viewScript": "file:./script.js",
+  "render": "file:./render.php"
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "parts-blocks/consent-checkbox",
+  "title": "Галочка згоди",
+  "category": "parts-blocks",
+  "icon": "yes-alt",
+  "description": "Згода на використання персональних даних.",
+  "supports": {
+    "html": false,
+    "anchor": false,
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "fontFamily": true,
+      "fontStyle": true,
+      "fontWeight": true,
+      "letterSpacing": true,
+      "textTransform": true,
+      "textDecoration": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "attributes": {
+    "labelBefore": { "type": "string", "default": "Я даю згоду на обробку моїх персональних даних для надання відповіді." },
+    "linkText":   { "type": "string", "default": "" },
+    "labelAfter": { "type": "string", "default": "" },
+    "linkUrl":    { "type": "string", "default": "#" },
+    "isRequired": { "type": "boolean", "default": true },
+    "inputName":  { "type": "string", "default": "consent" }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css"
+}

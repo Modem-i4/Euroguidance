@@ -1,0 +1,96 @@
+/* === Consent Checkbox (уніфіковано) === */
+
+/* Контейнер: успадковує типографію з block supports */
+.consent-checkbox{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  /* font-size/line-height приходять із панелі Typography */
+  color:#111827;
+}
+
+/* Чекбокс — фіксований квадрат, не стискається у флексі */
+.consent-checkbox .cc-input{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  box-sizing:border-box;
+
+  width:24px;
+  height:24px;
+  aspect-ratio: 1 / 1;   /* тримаємо квадрат */
+  flex: 0 0 24px;        /* не росте й не стискається */
+  border:2px solid #c7c9ce;
+  border-radius:6px;
+  background:#fff;
+  box-shadow: inset 0 0 0 2px transparent;
+  transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
+  cursor:pointer;
+}
+
+/* активний стан */
+// .consent-checkbox .cc-input:checked{
+//   background: linear-gradient(45deg, #7b61ff, #6C3088);
+//   box-shadow: inset 0 0 0 2px #fff;
+// }
+
+.consent-checkbox .cc-input:checked{
+  background:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 10"><path d="M1 5l3 3 7-7" stroke="%23fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center 55%/10px 10px no-repeat,
+    linear-gradient(45deg, #7b61ff, #6C3088);
+  box-shadow: inset 0 0 0 2px #fff;
+}
+
+
+/* галочка */
+.consent-checkbox .cc-input:checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 12px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* фокус */
+.consent-checkbox .cc-input:focus{
+  outline:none;
+  box-shadow: 0 0 0 2px rgba(123,97,255,.25), inset 0 0 0 2px #fff;
+  border-color:#7b61ff;
+}
+
+/* Лейбл і тексти */
+.consent-checkbox .cc-label{ cursor:pointer; user-select:text; }
+.consent-checkbox .cc-text{ color:#4b5563; }
+.consent-checkbox .cc-text--before::after{ content:" "; }
+
+/* Посилання */
+.consent-checkbox .cc-link{
+  color:#111827;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.consent-checkbox .cc-link:hover,
+.consent-checkbox .cc-link:focus{
+  text-decoration-thickness:2px;
+}
+
+.cc-label {
+  display: flex;
+}
+
+.cc-input {
+  margin: auto 7px;
+}
+
+/* Мобільні поправки */
+@media (max-width: 480px){
+  .consent-checkbox .cc-input{
+    width:22px;
+    height:22px;
+    flex-basis:22px;
+  }
+}

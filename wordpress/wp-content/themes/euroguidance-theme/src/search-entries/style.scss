@@ -1,0 +1,40 @@
+.search-block {
+  padding: 1rem;
+
+  &__input {
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 50px !important; // місце під іконку
+    border-radius: 8px;
+    border: 0;
+    background-color: #fff;
+    font-size: 16px;
+
+    // Іконка всередині падінга
+    background-repeat: no-repeat;
+    background-position: 16px 50%;
+    background-size: 20px 20px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__empty-message {
+    margin-top: 0.75rem;
+    font-style: italic;
+    color: #666;
+    display: none;
+  }
+}
+
+.search-block-wrapper {
+	position: relative;
+	width: auto;
+}
+
+.search-input-wrapper {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+  transform: translateY(50%);
+}

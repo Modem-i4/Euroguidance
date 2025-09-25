@@ -1,0 +1,30 @@
+.contact-card .wp-block-media-text {
+    grid-template-columns: 6% auto !important;
+}
+.contact-card .wp-social-link {
+    box-shadow: 0px 5px 5px 0px #00000040;
+    transition: 0.3s ease;
+    font-size: 32px;
+    padding: .2em !important;
+    width: 220px !important;
+    background: linear-gradient(-90deg, #7ABF92 0%, #4A78A1 100%);
+}
+
+.contact-card .wp-social-link:hover {
+    background-color: #575756;
+    box-shadow: 0px 7px 7px 0px #00000040;
+    transform: scale(1);
+}
+
+.contact-card .wp-social-link-facebook {
+    background: linear-gradient(-90deg, #5199d9 0%, #4884c3 50%, #5199d9 100%);
+}
+
+@media (max-width: 780px) {
+    .wp-block-social-links {
+        justify-content: center;
+    }
+    .contact-euroguidance__label {
+        text-align: center;
+    }
+}

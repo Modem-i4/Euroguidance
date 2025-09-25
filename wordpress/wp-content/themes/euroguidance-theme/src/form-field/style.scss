@@ -1,0 +1,25 @@
+/* Загальні стилі для input та textarea */
+.form-scope .form-component.is-input .fc-input,
+.form-scope .form-component.is-textarea .fc-textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+
+  background-color: #fff;
+  color: #000;
+
+  padding: 12px 14px;
+  font-size: 16px;
+  line-height: 1.4;
+margin-top: 10px;
+height: 40px;
+
+  border: none;
+  outline: none;
+}
+
+/* Текстова область */
+.form-scope .form-component.is-textarea .fc-textarea {
+  min-height: 80px;
+  resize: vertical;
+}

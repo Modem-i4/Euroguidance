@@ -1,0 +1,32 @@
+{
+  "translation-revision-date": "2025-09-11 00:00+0000",
+  "generator": "manual",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "uk",
+        "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+      },
+      "Choose in which languages to show the block.": [
+        "Виберіть, якими мовами показувати блок."
+      ],
+      "Choose from which languages the block is excluded.": [
+        "Виберіть, для яких мов блок буде виключений."
+      ],
+      "Content Restriction Mode": [
+        "Режим обмеження контенту"
+      ],
+      "Include": [
+        "Включити"
+      ],
+      "Exclude": [
+        "Виключити"
+      ],
+      "Select language(s)": [
+        "Виберіть мову(и)"
+      ]
+    }
+  }
+}

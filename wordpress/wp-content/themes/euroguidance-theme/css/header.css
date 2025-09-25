@@ -1,0 +1,270 @@
+header {
+	position: sticky;
+	top: 0;
+	z-index: 200;
+	background-color: rgba(255, 255, 255, 0.8);
+	backdrop-filter: blur(8px);
+}
+
+header .header__logo {
+  padding: 20px 0;
+}
+
+header .wp-block-navigation__container > .wp-block-navigation-item > a {
+	position: relative;
+	padding: 41px 0;
+}
+
+header .wp-block-navigation__responsive-container-open svg,
+header .wp-block-navigation__responsive-container-close svg {
+	height: 50px;
+	width: 50px;
+	color: #575756;
+}
+
+header .current-menu-item {
+	font-weight: bolder;
+	color: #575756 !important;
+}
+header .current-menu-ancestor > a > .wp-block-navigation-item__label {
+	font-weight: 700;
+	color: #232323 !important;
+}
+
+@media (min-width: 961px) {
+	header .wp-block-navigation__container > .wp-block-navigation-item > a::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 10px;
+		background: #fff56e;
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform .3s ease;
+	}
+	header .wp-block-navigation__container > .wp-block-navigation-item:hover > a::after,
+	header .wp-block-navigation__container > .current-menu-item > a::after,
+	header .wp-block-navigation__container > .current-menu-ancestor > a::after {
+		transform: scaleX(1);
+	}
+}
+
+/* гарантія, що у підпунктів немає нижнього підкреслення */
+header .wp-block-navigation__submenu-container .wp-block-navigation-item > a::after {
+  content: none !important;
+}
+
+/* сабменю: вертикальна смужка */
+header .wp-block-navigation__submenu-container .wp-block-navigation-item > a {
+  position: relative;
+}
+header .wp-block-navigation__submenu-container .wp-block-navigation-item > a::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: #fff56e;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform .3s ease;
+}
+header .wp-block-navigation__submenu-container .wp-block-navigation-item:hover > a::before,
+header .wp-block-navigation__submenu-container .current-menu-item > a::before,
+header .wp-block-navigation__submenu-container .current-menu-ancestor > a::before {
+  transform: scaleY(1);
+}
+
+header .wp-block-navigation__submenu-container {
+	gap: 5px;
+}
+@media (min-width: 961px) {
+	header .wp-block-navigation__submenu-container {
+		padding: 8px 8px 8px 16px !important;
+		border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;
+		background-color: rgba(255, 255, 255, 0.9) !important;
+		backdrop-filter: blur(20px);
+	}
+	header .wp-block-navigation .wp-block-navigation-item {
+		background-color: transparent;
+	}
+}
+
+/* Ховає текст, залишає іконку */
+header a.wp-block-navigation-item__content[href="/search"] {
+  font-size: 0;
+}
+header a.wp-block-navigation-item__content[href="/search"] img {
+  font-size: initial; 
+}
+
+header .header_logo-mobile {
+	display: none;
+}
+
+header .wp-element-button:hover {
+	background-color: red !important;
+}
+
+@media (max-width: 960px) {
+	header .wp-block-navigation__container > .wp-block-navigation-item > a::after {
+	  content: "";
+	  position: absolute;
+	  left: -16px;
+	  top: 0;
+	  bottom: 0;
+	  width: 10px;
+	  background: #fff56e;
+	  transform: scaleY(0);
+	  transform-origin: top;
+	  transition: transform .3s ease;
+	}
+
+	header .wp-block-navigation__container > .wp-block-navigation-item:hover > a::after,
+	header .wp-block-navigation__container > .current-menu-item > a::after {
+  		transform: scaleY(1);
+	}
+
+	header .wp-block-navigation__responsive-container {
+		overflow: visible !important;
+	}
+	header .header_logo-mobile {
+		display: block;
+	}
+	header {
+		--wp--style--block-gap: 6px;
+		font-size: xx-large;
+	}
+	header a.wp-block-navigation-item__content[href="/search"] {
+		font-size: initial;
+	}
+	header a > .wp-block-navigation-item__label {
+		font-weight: 700;
+	}
+	header .wp-block-navigation__responsive-container {
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		background-color: transparent !important;
+		padding: 0;
+	}
+
+	header .wp-block-navigation__responsive-container::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.6);
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.wp-block-navigation__responsive-dialog{
+		margin-top: 0 !important;
+	}
+	header .wp-block-navigation__responsive-container .wp-block-navigation__responsive-dialog {
+		position: fixed;
+		top: 0;
+		right: 0;
+		width: 350px;
+		max-width: 100%;
+		height: 100dvh;
+		background: #fff;
+		transform: translateX(100%);
+		transition: transform 0.3s ease;
+		padding: 32px;
+	}
+
+	header .wp-block-navigation__responsive-container-close {
+		top: auto;
+		right: 32px
+	}
+
+	header .wp-block-navigation__responsive-container.is-menu-open::before {
+		opacity: 0.6;
+		height: 100vh;
+	}
+
+	header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-dialog {
+		transform: translateX(0);
+	}
+
+	header .wp-block-navigation-item__label {
+		font-size: x-large;
+		font-weight: 700;
+	}
+	header .wp-block-navigation__submenu-container .wp-block-navigation-item__label {
+		font-size: large;
+		font-weight: 500;
+	}
+	
+	header .wp-block-navigation__responsive-container .wp-block-navigation__responsive-dialog {
+		background:
+		url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="%23C65094"/><stop offset="50%" stop-color="%234884C3"/><stop offset="100%" stop-color="%236C3088"/></linearGradient></defs><polygon points="0,9 18,12 50,10 82,13 100,9 100,20 0,20" fill="url(%23g)"/></svg>') bottom center / 100% 160px no-repeat,
+		linear-gradient(180deg, #f3d7e8 0%, #dce6f4 50%, #e9dff1 100%) center / 100% 100% no-repeat;
+	}
+
+	header .wp-block-navigation__responsive-container-content {
+		padding-top: 1em !important;
+	}
+
+	header .flag-uk::before,
+	header .flag-en::before {
+		content: "";
+		display: inline-block;
+		width: 1.2em;      /* ширина прапора */
+		height: 0.9em;     /* висота прапора */
+		margin-right: 0.4em;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		vertical-align: middle;
+	}
+
+	/* ТУТ вставиш свої URI */
+	header .flag-uk::before {
+		background-image: url("/wp-content/plugins/translatepress-multilingual/assets/flags/4x3/uk.svg");
+	}
+
+	header .flag-en::before {
+		background-image: url("/wp-content/plugins/translatepress-multilingual/assets/flags/4x3/en_US.svg");
+	}
+
+}
+
+
+
+
+/* ПЕРЕХІД ДО МОБІЛЬНОГО МЕНЮ */
+@media (max-width: 960px) {
+  .wp-block-navigation__responsive-container-open,
+  .wp-block-navigation__responsive-container-close {
+    display: block !important;
+  }
+
+  .wp-block-navigation__responsive-container {
+    display: none !important;
+  }
+
+  .wp-block-navigation__responsive-container.is-menu-open {
+    display: block !important;
+  }
+
+  .wp-block-navigation:not(.has-text-color) .wp-block-navigation__responsive-container.is-menu-open {
+	color: #232323;
+  }
+}
+
+/* показуємо звичайне меню */
+@media (min-width: 961px) {
+  .wp-block-navigation__responsive-container-open,
+  .wp-block-navigation__responsive-container-close {
+    display: none !important;
+  }
+
+  .wp-block-navigation__responsive-container {
+    display: block !important;
+  }
+}

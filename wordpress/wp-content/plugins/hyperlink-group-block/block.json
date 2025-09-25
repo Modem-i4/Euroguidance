@@ -1,0 +1,62 @@
+{
+	"apiVersion": 3,
+	"name": "tiptip/hyperlink-group-block",
+	"title": "Hyperlink Group",
+	"category": "design",
+    "supports": {
+        "html": true,
+        "anchor": true,
+        "align": true,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"interactivity": {
+			"clientNavigation": true
+		}
+    },
+	"usesContext": [ "postId", "postType", "queryId" ],
+    "attributes": {
+		"colorText": {
+			"type": "string"
+		},
+		"colorBkg": {
+			"type": "string"
+		},
+		"colorBkgHover": {
+			"type": "string"
+		},
+		"url": {
+			"type": "string"
+		},
+		"title": {
+			"type": "string"
+		},
+        "linkTarget": {
+			"type": "string"
+		},
+		"ariaLabel": {
+			"type": "string"
+		},
+		"rel": {
+			"type": "string"
+		},
+        "backgroundColor": {
+			"type": "string"
+		},
+		"textColor": {
+			"type": "string"
+		},
+        "gradient": {
+			"type": "string"
+		},
+		"queryLoopLink": {
+			"type": "boolean",
+			"default": false
+		}
+    },
+	"textdomain": "hyperlink-group-block",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/style-index.css",
+	"style": "file:./build/style-index.css"
+}

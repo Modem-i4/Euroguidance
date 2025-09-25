@@ -1,0 +1,82 @@
+/* один елемент Q&A */
+.qa-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 46px;
+  background: #f3f4f6;
+  overflow: hidden;
+  box-shadow: 0px 4px 6px 0px #00000040;
+  transition: box-shadow .25s ease, background-color .25s ease, border-color .25s ease;
+}
+
+/* summary + стрілка */
+.qa-summary {
+  list-style: none;
+  display: flex;
+  min-height: 70px;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: var(--wp--preset--font-family--noto-sans);
+  color: #575756;
+  background: #e5e5ea;
+  user-select: none;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  transition: background-color .25s ease, color .25s ease;
+}
+.qa-summary::-webkit-details-marker { display: none; }
+
+.qa-summary:hover {
+  background: #f5f5f8;
+}
+
+/* chevron-стрілка (ВНИЗ у закритому) — як ти хотів */
+.qa-arrow { width: 20px; height: 20px; flex: 0 0 20px; position: relative; }
+.qa-arrow::before {
+  content: "";
+  position: absolute; inset: 0; margin: auto;
+  width: 10px; height: 10px;
+  border-right: 2px solid #6b7280;
+  border-bottom: 2px solid #6b7280;
+  transform: rotate(-45deg); /* вниз */
+  transition: transform .25s ease, border-color .25s ease;
+}
+
+/* контент — CSS Grid акордеон БЕЗ ривків */
+.qa-content {
+  /* візуал */
+  padding: 0 18px 0 50px;         /* top/bottom = 0 в закритому */
+  color: #374151;
+  line-height: 1.6;
+
+  /* магія: анімуємо рядок grid */
+  display: grid;
+  grid-template-rows: 0fr;        /* закрито */
+  transition: grid-template-rows .35s ease, padding .25s ease, opacity .25s ease;
+  opacity: 0;
+}
+.qa-content-inner { overflow: hidden; } /* саме тут відбувається обрізання */
+
+/* відкритий стан класом */
+.qa-item.is-open { box-shadow: 0px 8px 10px 0px #00000040; }
+.qa-item.is-open > .qa-summary { background: #9ca3af; color: #ffffff; }
+.qa-item.is-open .qa-arrow::before { transform: rotate(45deg); border-color: #ffffff; }
+
+.qa-item.is-open .qa-content {
+  grid-template-rows: 1fr;        /* відкрито */
+  padding: 22px 18px 27px 50px;
+  opacity: 1;
+}
+
+@media (min-width: 780px) {
+  /* hover-ефект */
+  .qa-summary:hover .qa-arrow::before { border-color: #111827; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qa-item, .qa-summary, .qa-arrow::before, .qa-content { transition: none !important; }
+}

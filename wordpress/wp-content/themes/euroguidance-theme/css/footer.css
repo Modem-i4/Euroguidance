@@ -1,0 +1,300 @@
+.footer-wrapper {
+  background: linear-gradient(84deg, #7ABF92 0%, #4A78A1 100%);
+}
+.footer-wrapper::before {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: calc(100% + 200px);
+  background: linear-gradient(84deg, #7ABF92 0%, #4A78A1 100%);
+	bottom: 0;
+	left: 0;
+	z-index: -2;
+	clip-path: polygon(
+	0 8%,      /* верх-ліво нижче */
+	100% 0,    /* верх-право вище */
+	100% 100%, /* низ-право */
+	0 100%     /* низ-ліво */
+	);
+}	
+
+footer .show-on-mobile, 
+footer li.show-on-pc.wp-block-navigation-submenu {
+  display: none !important;
+}
+
+/* footer.wp-block-template-part nav.wp-block-navigation li.wp-block-navigation-item.has-child 
+> ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu.euroguidance-tools-cat {
+  gap: 3px !important;
+} */
+
+/****************************************************
+ * FOOTER NAV — повний CSS, строго під цю розмітку
+ * Desktop (≥961px): UL = row, LI = колонки, підменю статичні
+ * Mobile (≤960px): звичайний вертикальний список, підменю по кліку
+ ****************************************************/
+
+/* базові скидання тільки в footer */
+footer.wp-block-template-part nav.wp-block-navigation ul,
+footer.wp-block-template-part nav.wp-block-navigation li{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ===================== DESKTOP (≥961px) ===================== */
+@media (min-width: 961px){
+
+  /* контейнер навігації у футері */
+  footer.wp-block-template-part nav.wp-block-navigation{
+    display: block !important;
+  }
+
+  /* верхній UL — РЯДКОМ + вирівнювання */
+  footer.wp-block-template-part nav.wp-block-navigation > ul.wp-block-navigation__container.wp-block-navigation{
+    display: flex;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: space-evenly !important;
+  }
+
+  /* колонка = верхній LI */
+  footer.wp-block-template-part nav.wp-block-navigation > ul.wp-block-navigation__container.wp-block-navigation
+  > li.wp-block-navigation-item{
+    display: flex;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* заголовок колонки */
+  footer.wp-block-template-part nav.wp-block-navigation > ul.wp-block-navigation__container.wp-block-navigation
+  > li.wp-block-navigation-item > a.wp-block-navigation-item__content{
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    text-decoration: none !important;
+    padding: 0 !important;
+  }
+
+  /* ПІДМЕНЮ — завжди статичне під заголовком */
+  /* ховаємо кнопку-іконку */
+  footer.wp-block-template-part nav.wp-block-navigation
+  button.wp-block-navigation__submenu-icon.wp-block-navigation-submenu__toggle{
+    display: none !important;
+  }
+
+  /* базовий стан підменю */
+  footer.wp-block-template-part nav.wp-block-navigation
+  li.wp-block-navigation-item.has-child > ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu{
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+
+    margin-top: 12px !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    width: auto !important;
+    z-index: auto !important;
+  }
+
+  /* прибити dropdown-поведінку на hover/focus */
+  footer.wp-block-template-part nav.wp-block-navigation
+  li.wp-block-navigation-item.has-child.open-on-hover-click:hover > ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu,
+  footer.wp-block-template-part nav.wp-block-navigation
+  li.wp-block-navigation-item.has-child.open-on-hover-click:focus-within > ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu{
+    display: flex !important;
+    position: static !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  footer li.show-on-pc.wp-block-navigation-submenu {
+    display: block !important;
+  }
+}
+
+/* ===================== MOBILE (≤960px) ===================== */
+/* простий вертикальний список; підменю відкривається по кліку */
+@media (max-width: 960px){
+
+
+  footer .wp-block-navigation {
+    display: none !important;
+  }
+  footer .show-on-mobile {
+    display: block !important;
+  }
+  footer .wp-block-navigation-item__label {
+      font-size: x-large;
+      font-weight: 500;
+  }
+  footer .items-justified-center.wp-block-navigation {
+    max-width: 250px;
+  }
+	footer .open-on-click.wp-block-navigation-submenu {
+		display: block !important;
+	}
+	footer .wp-block-navigation-submenu {
+    border: none !important;
+	}
+
+  /* контейнер у звичайному потоці */
+  footer.wp-block-template-part nav.wp-block-navigation{
+    display: block !important;
+  }
+    
+  /* Базова стрілка */
+  footer .wp-block-navigation-submenu__toggle .wp-block-navigation-item__label::after {
+    content: "";
+    display: inline-block;
+    width: 0.65em;
+    height: 0.65em;
+    margin-left: 0.4em;
+    vertical-align: middle;
+
+    border-right: 5px solid currentColor;
+    border-bottom: 5px solid currentColor;
+    border-radius: 3px;          /* округлі кінчики */
+    transform: rotate(-45deg);
+    transition: transform .2s ease;
+    top: 5px;
+  }
+
+  /* Миттєво при взаємодії */
+  footer .wp-block-navigation-submenu__toggle.is-fast 
+    .wp-block-navigation-item__label::after {
+    transform: rotate(45deg);
+  }
+
+  /* Fallback, коли WP нарешті оновить aria-expanded */
+  footer .wp-block-navigation-submenu__toggle[aria-expanded="true"] 
+    .wp-block-navigation-item__label::after {
+    transform: rotate(45deg);
+  }
+  footer button.wp-block-navigation-submenu__toggle
+  ~ ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu {
+      height: 0;
+      transition: 0.2s ease-in-out;
+  }
+  footer button.wp-block-navigation-submenu__toggle.is-fast 
+  ~ ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu {
+      height: 300px;
+  }
+  /* верхній UL — КОЛОНКОЮ */
+  footer.wp-block-template-part nav.wp-block-navigation > ul.wp-block-navigation__container.wp-block-navigation{
+    display: flex;
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+  }
+
+  /* елементи на всю ширину */
+  footer.wp-block-template-part nav.wp-block-navigation > ul.wp-block-navigation__container.wp-block-navigation
+  > li.wp-block-navigation-item{
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  /* показати кнопку-іконку підменю */
+  footer.wp-block-template-part nav.wp-block-navigation
+  button.wp-block-navigation__submenu-icon.wp-block-navigation-submenu__toggle{
+    display: inline-flex !important;
+  }
+
+  /* підменю сховані за замовчуванням */
+  footer.wp-block-template-part nav.wp-block-navigation
+  li.wp-block-navigation-item.has-child > ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu{
+    position: static !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* коли aria-expanded="true" — показуємо */
+  footer.wp-block-template-part nav.wp-block-navigation
+  button.wp-block-navigation-submenu__toggle[aria-expanded="true"]
+  ~ ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu{
+    display: block !important;
+  }
+  footer.wp-block-template-part nav.wp-block-navigation > ul.wp-block-navigation__container.wp-block-navigation
+  > li.wp-block-navigation-item > a.wp-block-navigation-item__content{
+    padding: 0 !important;
+  }
+
+  footer .wp-block-navigation-submenu {
+	border: 0;
+  }
+}
+/* MOBILE end */
+
+footer .open-on-click.wp-block-navigation-submenu > .wp-block-navigation__submenu-icon {
+	display: none;
+}
+
+
+/* Якщо потрібен жовтий */
+/* Скинемо підсвітку для батьківських пунктів/категорій */
+footer li.current-menu-ancestor .wp-block-navigation-item__label,
+footer li.has-child.current-menu-item > .wp-block-navigation-item__content .wp-block-navigation-item__label {
+  color: inherit !important;
+}
+
+/* Підсвічуємо тільки точний активний лінк */
+footer a[aria-current="page"] .wp-block-navigation-item__label {
+  color: #fff56e !important;
+}
+
+
+/* ===== ЖОВТА СМУГА ===== */
+
+/* топ-рівень без дітей (ГОЛОВНА тощо) */
+footer .wp-block-navigation-item:not(.has-child) > a {
+  position: relative;
+}
+footer .wp-block-navigation-item:not(.has-child) > a::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: #fff56e;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform .3s ease;
+}
+footer .wp-block-navigation-item:not(.has-child):hover > a::before,
+footer .wp-block-navigation-item.current-menu-item:not(.has-child) > a::before {
+  transform: scaleY(1);
+}
+
+/* категорії з дітьми – без смуги */
+footer .wp-block-navigation-item.has-child > .wp-block-navigation-item__content::before {
+  content: none !important;
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "parts-blocks/form-field",
+  "version": "0.1.0",
+  "title": "Компонент форми",
+  "category": "parts-blocks",
+  "icon": "feedback",
+  "description": "Універсальні елементи форми: input / textarea і тд.",
+  "supports": { "html": false },
+  "attributes": {
+    "variant": {
+      "type": "string",
+      "default": "input"
+    },
+    "label": {
+      "type": "string",
+      "default": ""
+    },
+    "name": {
+      "type": "string",
+      "default": ""
+    },
+    "placeholder": {
+      "type": "string",
+      "default": ""
+    },
+    "required": {
+      "type": "boolean",
+      "default": false
+    },
+    "inputType": {
+      "type": "string",
+      "default": "text"
+    },
+    "rows": {
+      "type": "number",
+      "default": 4
+    }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css"
+}

@@ -1,0 +1,27 @@
+{
+  "apiVersion": 2,
+  "name": "parts-blocks/materials-card",
+  "title": "Картка з файлом",
+  "category": "parts-blocks",
+  "icon": "media-document",
+  "description": "Картка з назвою, зображенням та файлом.",
+  "attributes": {
+    "title": { 
+      "type": "string",
+      "default": ""
+    },
+    "file": {
+      "type": "string",
+      "default": ""
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false
+  },
+  "editorScript": "file:./index.js",
+	"style": "file:./style-index.css"
+}

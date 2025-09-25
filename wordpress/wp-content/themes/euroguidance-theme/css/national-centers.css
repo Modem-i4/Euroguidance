@@ -1,0 +1,42 @@
+.national-centers-search-wrapper {
+    width: 40%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.centers-country-card img {
+    border-radius: 5px;
+}
+
+.centers-country-card .wp-block-group-is-layout-constrained {
+    box-shadow: 0px 4px 6px 0px #00000040;
+}
+.centers-country-card, .centers-country-card div.wp-block-group {
+    height: 100% !important;
+}
+.centers-country-card div.wp-block-group {
+    display: flex;
+}
+.centers-country-card div.wp-block-group .wp-block-media-text {
+    width: 100%;
+}
+.centers-country-card p {
+    padding: 0;
+    margin: 0;
+}
+.centers-country-card > .wp-block-group {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.centers-country-card:hover > .wp-block-group {
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 8px 2px #00000040;
+}
+
+.wp-block-media-text__media img {
+    min-height: 22px;
+}
+@media (max-width: 800px) {
+  .national-centers-search-wrapper {
+      width: 100%;
+  }
+}

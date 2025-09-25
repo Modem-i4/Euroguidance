@@ -1,0 +1,46 @@
+.va-show-more { position: relative; }
+
+.va-show-more__content {
+  overflow: clip;
+  transition: max-height .35s ease;
+}
+
+.va-show-more:not(.is-expanded) .va-show-more__content {
+  max-height: var(--va-collapsed, 0px);
+}
+
+.va-show-more.is-expanded .va-show-more__content {
+  max-height: var(--va-expanded, 0px);
+}
+
+.va-show-more__fade {
+  position: absolute; left: 0; right: 0; bottom: 50px; height: 120px;
+  background: linear-gradient(180deg, rgba(0,0,0,0), var(--va-show-more-bg, #fff));
+  pointer-events: none; opacity: 1; transition: opacity .2s ease;
+}
+
+.va-show-more.is-expanded .va-show-more__fade { opacity: 0; }
+
+.va-show-more__btn {
+  position: relative; display: block; margin: 16px auto 0; min-width: 170px;
+  padding: 10px 16px; border: 0; border-radius: 999px; cursor: pointer;
+  background: #f0f0f0; box-shadow: 0 6px 16px rgba(0,0,0,.08); font-weight: 600;
+}
+
+.va-show-more:not(.needs-toggle) .va-show-more__content {
+  max-height: none !important;
+  overflow: visible;
+}
+body:not(.wp-admin):not(.editor-styles-wrapper) .va-show-more:not(.needs-toggle) .va-show-more__fade,
+body:not(.wp-admin):not(.editor-styles-wrapper) .va-show-more:not(.needs-toggle) .va-show-more__btn {
+  display: none !important;
+}
+
+.wp-admin .va-show-more__fade {
+    bottom: 20px;
+}
+
+.text-center {
+  text-align: center;
+  margin-top: 2em;
+}
