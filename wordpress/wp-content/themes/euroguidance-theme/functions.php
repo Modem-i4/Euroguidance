@@ -42,3 +42,4 @@ require_once get_template_directory() . '/includes/create-content.php';
 require_once get_template_directory() . '/includes/adjust-menus.php';
 require_once get_template_directory() . '/includes/tp-cleanup.php';
 require_once get_template_directory() . '/includes/lang.php';
+require_once get_template_directory() . '/includes/CPTs.php';

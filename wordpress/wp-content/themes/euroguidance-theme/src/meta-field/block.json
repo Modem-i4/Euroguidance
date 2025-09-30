@@ -1,0 +1,19 @@
+{
+  "apiVersion": 3,
+  "name": "parts-blocks/meta-field",
+  "title": "Поле для відомостей",
+  "category": "widgets",
+  "icon": "editor-textcolor",
+  "description": "Редаговане post meta прямо в полотні: обери ключ у властивостях",
+  "supports": { "html": false },
+  "attributes": {
+    "key":        { "type": "string", "default": "" },
+    "label":      { "type": "string", "default": "" },
+    "fieldType":  { "type": "string", "default": "text" },
+    "placeholder":{ "type": "string", "default": "" },
+    "as":         { "type": "string", "default": "span" }
+  },
+  "usesContext": ["postId","postType"],
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}
