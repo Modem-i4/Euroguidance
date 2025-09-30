@@ -1,0 +1,12 @@
+.inter-mobility__image{
+    /* min-width: 422px; */
+    /* width: 422px; */
+}
+
+@media (max-width: 780px) {
+
+.inter-mobility__column-right{
+    display: flex;
+    justify-content: center;
+}
+}

@@ -9,6 +9,9 @@
 @import url("/wp-content/themes/euroguidance-theme/css/national-centers.css");
 @import url("/wp-content/themes/euroguidance-theme/css/cover-letter.css");
 @import url("/wp-content/themes/euroguidance-theme/css/lang-switcher.css");
+@import url("/wp-content/themes/euroguidance-theme/css/buttons__main-page.css");
+@import url("/wp-content/themes/euroguidance-theme/css/about-page.css");
+@import url("/wp-content/themes/euroguidance-theme/css/inter-mobility-page.css");
 
 .entry-content {
 	overflow-x: hidden;

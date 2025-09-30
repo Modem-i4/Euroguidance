@@ -1,83 +1,153 @@
+.hero-colums {
+	margin-right: calc(50% - 50vw) !important;
+}
+
 .hero__wrpapper {
 	position: relative;
-	background: linear-gradient(85deg, #7ABF92 0%, #4A78A1 100%);
-	clip-path: polygon(
-		0% 0%,
-		100% 0%,
-		100% 82%,  
-		0% 100% 
-	);
+	background: linear-gradient(85deg, #7abf92 0%, #4a78a1 100%);
 }
-.hero-btn .wp-block-button a {
+/* .hero-btn .wp-block-button a {
 	box-shadow: 0px 8px 10px 0px #00000040;
 	transition: 0.3s ease;
 }
 .hero-btn .wp-block-button a:hover {
 	box-shadow: 0px 10px 12px 0px #00000040;
-	background: #f8ec4a !important;
+} */
+
+.hero-btn .wp-block-button a {
+	color: #fff;
+	border-radius: 4px;
+	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+	transition:
+		transform 0.15s ease,
+		/* filter 0.15s ease, */ box-shadow 0.15s ease;
 }
+.hero-btn .wp-block-button a:hover {
+    background-color: #ffdd31 !important;
+	/* filter: brightness(0.94); */
+	transform: translateY(-3px);
+	box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.25);
+}
+
 .bg-polygon::after {
-  content: '';
-  position: absolute;
-  width: 30%;
-  height: 24em;
-  background: #f2f2f7;
-  z-index: -1;
-  clip-path: polygon(
-    0% 3.519%,
-    0% 96.774%,
-    100% 100%,
-    100% 0%
-  );
+	content: "";
+	position: absolute;
+	width: 30%;
+	height: 24em;
+	background: #f2f2f7;
+	z-index: -1;
+	clip-path: polygon(0% 3.519%, 0% 96.774%, 100% 100%, 100% 0%);
 }
 
 .bg-polygon.bg-polygon-square::after {
-  width: 45%;
-  bottom: 0;
-  height: 34em;
-  clip-path: polygon(
-	8% 0%,
-	100% 0%,
-	100% 100%,
-	0% 100%
-	);
+	width: 45%;
+	bottom: 0;
+	height: 34em;
+	clip-path: polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%);
 }
 
 .bg-polygon-image-centered::after {
 	width: 100%;
 	bottom: -3%;
 	height: 106%;
-	clip-path: polygon(7.521% 9.544%, 0% 100%, 100% 88.174%, 95.652% 0%, 7.521% 9.544%);
+	clip-path: polygon(
+		7.521% 9.544%,
+		0% 100%,
+		100% 88.174%,
+		95.652% 0%,
+		7.521% 9.544%
+	);
 }
 
 .bg-polygon-right::after {
-  right: 0;
-  bottom: -2rem;
+	right: 0;
+	bottom: -2rem;
 }
 
 .bg-polygon-left::after {
-  left: 0;
-  top: -2rem;
+	left: 0;
+	top: -2rem;
 }
-
 
 .block-editor-page::after {
 	display: none;
 }
+.hero-left-col {
+	min-width: 375px;
+}
+
+@media (max-width: 1170px) {
+	/* За замовчуванням: ховати на фронті */
+	.hero-photo-right {
+		display: none;
+	}
+
+	/* У редакторі: показувати */
+	.editor-styles-wrapper .hero-photo-right {
+		display: block !important; /* або inline/inline-block — як потрібно */
+	}
+}
+
+@media (max-width: 950px) {
+	.hero-photo-center {
+		display: none;
+	}
+	.editor-styles-wrapper .hero-photo-center {
+		display: block !important; /* або inline/inline-block — як потрібно */
+	}
+}
+
 @media (max-width: 780px) {
+	@media (min-width: 540px) {
+		.hero-photo-center {
+			display: block;
+		}
+		.hero-photo-right {
+			display: block;
+		}
+	}
+	@media (max-width: 460px) {
+		.hero__header {
+			font-size: 32px !important;
+		}
+		.hero-paragraph {
+			font-size: 14px !important;
+		}
+	}
+
+	@media (min-width: 460px) {
+		.hero-photo-center {
+			display: block;
+		}
+
+		.hero-photo-left img {
+			width: auto !important;
+		}
+	}
+	.hero-photo-left img {
+		width: 100vh;
+	}
+
+	.hero__wrpapper {
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	.hero-right-col {
+		display: flex;
+	}
+
 	.hero__img {
 		margin-top: 0 !important;
 	}
 	.hero-left-col {
-		padding-bottom: 2em !important;
+		padding-top: 32px !important;
+		padding-bottom: 50px !important;
+		padding-right: 16px !important;
+		/* max-width: 400px; */
+		min-width: 0px;
 	}
 	.hero__wrpapper {
-		clip-path: polygon(
-			0% 0%,
-			100% 0%,
-			100% 90%,  
-			0% 100% 
-		);
 		padding-top: 0 !important;
 	}
 	.title-about-euroguidance {
