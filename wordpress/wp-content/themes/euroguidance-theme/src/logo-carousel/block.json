@@ -1,0 +1,29 @@
+{
+  "apiVersion": 3,
+  "name": "ntd/logo-carousel",
+  "title": "Логотипи — карусель",
+  "category": "widgets",
+  "icon": "images-alt2",
+  "description": "Горизонтальна карусель логотипів із пагінацією та стрілками.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "attributes": {
+    "slides": {
+      "type": "array",
+      "default": []
+    },
+    "showArrows": {
+      "type": "boolean",
+      "default": true
+    },
+    "showDots": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./frontend.js"
+}

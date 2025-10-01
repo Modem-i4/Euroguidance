@@ -1,0 +1,170 @@
+/* style.scss */
+.ntd-logo-carousel {
+  --gap: 2rem;
+  --dot-size: 8px;
+  --control-size: 36px;
+
+  position: relative;
+  width: 100%;
+
+  &__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &:not(.ntd-logo-carousel--editor) {
+    .ntd-logo-carousel__viewport {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .ntd-logo-carousel__viewport::-webkit-scrollbar { display: none; }
+  }
+
+  &__track {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--gap);
+    padding: .5rem 2.25rem;
+    min-height: 110px;
+  }
+
+  &__slide {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px; /* safe area довкола кожного зображення */
+    transition: transform .25s ease, box-shadow .25s ease;
+
+    /* ефект при наведенні на ВЕСЬ слайд */
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
+    }
+
+    img {
+      max-height: 96px;
+      max-width: 300px;
+      width: auto;
+      height: auto;
+      display: block;
+      filter: none;           /* повноколірні логотипи */
+      -webkit-filter: none;
+      opacity: 1;
+    }
+  }
+
+  &__link { display: inline-flex; align-items: center; justify-content: center; }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: .75rem;
+  }
+
+  /* Стрілки: один набір подвійних шевронів, збільшена клікабельна зона */
+  &__nav {
+    background: transparent;
+    border: 0;
+    padding: 10px 16px;
+    line-height: 1;
+    cursor: pointer;
+    color: #2f2f2f;
+    opacity: .9;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    outline: none;
+    box-shadow: none;
+    transition: opacity .2s ease, transform .2s ease;
+
+    &:hover,
+    &:focus,
+    &:active {
+      opacity: 1;
+      outline: none;
+      box-shadow: none; /* без рамки при наведенні/фокусі */
+    }
+
+    &::before,
+    &::after { content: none; }
+    &::marker { content: none; }
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 12px;
+      background: currentColor;
+      -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'><path d='M2 0 L8 6 L2 12 L4 12 L10 6 L4 0 Z M10 0 L16 6 L10 12 L12 12 L18 6 L12 0 Z'/></svg>");
+      mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'><path d='M2 0 L8 6 L2 12 L4 12 L10 6 L4 0 Z M10 0 L16 6 L10 12 L12 12 L18 6 L12 0 Z'/></svg>");
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
+
+    &.is-prev::before { transform: scaleX(-1); }
+  }
+
+  &__dots { display: flex; gap: .5rem; }
+  &__dot {
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 999px;
+    background: #cfcfcf;
+    border: 0;
+    cursor: pointer;
+    transition: background-color .2s ease, transform .2s ease;
+    &.is-active { background: #666; transform: scale(1.1); }
+  }
+
+  &.is-grabbing { cursor: grabbing; }
+  &.is-grabbing * { cursor: grabbing !important; }
+
+  /* Редактор */
+  &--editor {
+    .ntd-logo-carousel__viewport {
+      border: 1px dashed #e3e3e3;
+      padding: .25rem 0;
+      overflow-x: auto; /* у редакторі залишаємо скролбар */
+    }
+    .ntd-logo-carousel__track {
+      justify-content: flex-start !important;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      gap: 1.5rem;
+      min-height: 96px;
+    }
+    .ntd-logo-carousel__slide {
+      flex-direction: column;
+      gap: .5rem;
+      min-width: 160px;
+      padding: 10px;
+      transition: transform .25s ease, box-shadow .25s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
+      }
+    }
+    .ntd-logo-carousel__thumb { padding: 10px; }
+    .ntd-logo-carousel__thumb img { max-height: 96px; max-width: 300px; }
+    .ntd-logo-carousel__placeholder { width: 160px; height: 72px; background: #f3f3f3; }
+    .ntd-logo-carousel__bar { display: flex; gap: .25rem; justify-content: center; margin-bottom: .25rem; }
+    .ntd-logo-carousel__fields { width: 100%; }
+    .ntd-logo-carousel__toolbar { margin-top: .75rem; }
+  }
+
+  @media (max-width: 480px) {
+    &__track { gap: 1.25rem; padding-left: 2rem; padding-right: 2rem; min-height: 100px; }
+    &__slide img { max-height: 84px; max-width: 300px; }
+  }
+}
