@@ -1,14 +1,52 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-/**
- * Спільні налаштування для "Амбасадори" і "Експерти"
- */
 add_action('init', function () {
   $people_types = [
     'ambassador' => ['label' => 'Амбасадори', 'icon' => 'dashicons-groups'],
     'expert'     => ['label' => 'Експерти',    'icon' => 'dashicons-welcome-learn-more'],
   ];
+
+  $sanitize_string_array = function ($value) {
+    if (is_string($value)) {
+      $items = [];
+      if (strpos($value, '<li') !== false && preg_match_all('~<li\b[^>]*>(.*?)</li>~is', $value, $m)) {
+        foreach ($m[1] as $li) {
+          $t = trim(wp_strip_all_tags($li));
+          if ($t !== '') $items[] = $t;
+        }
+        return $items;
+      }
+      $t = trim(wp_strip_all_tags($value));
+      return $t === '' ? [] : [$t];
+    }
+
+    if (!is_array($value)) return [];
+
+    $to_string = function ($v) use (&$to_string) {
+      if (is_string($v)) return trim(wp_strip_all_tags($v));
+      if (is_array($v)) {
+        if (array_key_exists('props', $v)) {
+          $children = $v['props']['children'] ?? null;
+          if (is_array($children)) {
+            $joined = trim(implode('', array_map(fn($c) => is_string($c) ? $c : (is_scalar($c) ? (string)$c : ''), $children)));
+            return trim(wp_strip_all_tags($joined));
+          }
+          if (is_string($children)) return trim(wp_strip_all_tags($children));
+        }
+        return trim(wp_strip_all_tags(implode(' ', array_map($to_string, $v))));
+      }
+      if (is_scalar($v)) return trim(wp_strip_all_tags((string)$v));
+      return '';
+    };
+
+    $out = [];
+    foreach ($value as $el) {
+      $s = $to_string($el);
+      if ($s !== '') $out[] = $s;
+    }
+    return array_values($out);
+  };
 
   foreach ($people_types as $type => $cfg) {
     register_post_type($type, [
@@ -18,128 +56,43 @@ add_action('init', function () {
       'supports'     => ['title','editor','thumbnail','custom-fields'],
       'menu_icon'    => $cfg['icon'],
       'template'     => [
-        [ 'parts-blocks/meta-field', [ 'key' => 'role',  'label' => 'Роль',  'placeholder' => 'напр., Координаторка проєктів' ] ],
-        [ 'parts-blocks/meta-field', [ 'key' => 'descr', 'label' => 'Опис', 'placeholder' => 'Короткий опис (верхній текст)' ] ],
+        [ [ 'core/columns', [], [ [ 'core/column', [ 'width' => '300px' ], [ [ 'core/post-featured-image', [ 'style' => [ 'border' => [ 'radius' => '0px' ] ] ] ], ]], [ 'core/column', [], [ [ 'core/post-title', [] ], [ 'core/separator', [] ], [ 'core/paragraph', [ 'content' => 'Ваш короткий опис', 'placeholder' => 'Ваш короткий опис' ] ], ]], ]], [ 'core/heading', [ 'textAlign' => 'center', 'level' => 1, 'content' => '<strong>Сертифікація та кваліфікація</strong>' ] ], [ 'parts-blocks/bullet-meta-list', [ 'metaKey' => 'qual', 'className' => 'checks-list green-checks' ] ], [ 'core/heading', [ 'textAlign' => 'center', 'level' => 1, 'content' => 'Спеціалізації' ] ], [ 'parts-blocks/bullet-meta-list', [ 'metaKey' => 'spec', 'className' => 'checks-list blue-checks' ] ], [ 'core/heading', [ 'textAlign' => 'center', 'level' => 1, 'content' => 'Досвід' ] ], [ 'parts-blocks/bullet-meta-list', [ 'metaKey' => 'exp' ] ], [ 'core/heading', [ 'textAlign' => 'center', 'level' => 1, 'content' => 'Контакти' ] ], [ 'core/group', [ 'style'  => [ 'spacing' => [ 'blockGap' => 'var:preset|spacing|50' ] ], 'layout' => [ 'type' => 'flex', 'flexWrap' => 'nowrap', 'justifyContent' => 'center' ], ], [ [ 'core/media-text', [ 'mediaWidth' => 15, 'isStackedOnMobile' => false, 'imageFill' => false, 'mediaType' => 'image', 'mediaUrl' => get_template_directory_uri() . '/assets/icons/email.svg', ], [ [ 'core/paragraph', [ 'content' => 'email', 'placeholder' => 'Вміст…', 'metadata' => [ 'bindings' => [ 'content' => [ 'source' => 'core/post-meta', 'args' => [ 'key' => 'email' ], ], ], ], ]], ] ], [ 'core/media-text', [ 'mediaWidth' => 15, 'isStackedOnMobile' => false, 'imageFill' => false, 'mediaType' => 'image', 'mediaUrl' => get_template_directory_uri() . '/assets/icons/phone.svg', ], [ [ 'core/paragraph', [ 'content' => 'телефон', 'placeholder' => 'Вміст…', 'metadata' => [ 'bindings' => [ 'content' => [ 'source' => 'core/post-meta', 'args' => [ 'key' => 'phone' ], ], ], ], ]], ] ], ] ], ],
       ],
     ]);
 
-    // meta під обидва ключі
-    $m = ['single'=>true, 'show_in_rest'=>true, 'auth_callback'=>'__return_true'];
-    register_post_meta($type, 'role',  ['type'=>'string'] + $m);
-    register_post_meta($type, 'descr', ['type'=>'string'] + $m);
+    $common = [
+      'single'            => true,
+      'type'              => 'array',
+      'default'           => [],
+      'auth_callback'     => function() { return current_user_can('edit_posts'); },
+      'sanitize_callback' => $sanitize_string_array,
+      'show_in_rest'      => [
+        'schema' => [
+          'type'    => 'array',
+          'default' => [],
+          'items'   => [ 'type' => 'string' ],
+        ],
+      ],
+    ];
+
+    register_post_meta($type, 'qual', $common);
+    register_post_meta($type, 'spec', $common);
+    register_post_meta($type, 'exp', $common);
+
+    $meta_string = [
+      'single'        => true,
+      'type'          => 'string',
+      'default'       => '',
+      'auth_callback' => function () { return current_user_can('edit_posts'); },
+      'show_in_rest'  => [
+        'schema' => [
+          'type'    => 'string',
+          'default' => '',
+        ],
+      ],
+    ];
+
+    register_post_meta($type, 'phone', $meta_string);
+    register_post_meta($type, 'email', $meta_string);
   }
 });
-
-/**
- * Скрипт панелі мета (один і той самий — для обох CPT)
- */
-add_action('enqueue_block_editor_assets', function () {
-  wp_enqueue_script(
-    'people-meta-panel',
-    get_stylesheet_directory_uri() . '/js/amb-meta-panel.js',
-    ['wp-plugins','wp-edit-post','wp-element','wp-components','wp-data','wp-core-data'],
-    null,
-    true
-  );
-});
-
-/**
- * Колонки в адмінці (для обох CPT)
- */
-add_filter('manage_edit-ambassador_columns', 'people_add_cols');
-add_filter('manage_edit-expert_columns',     'people_add_cols');
-function people_add_cols($cols) {
-  $ins = ['role' => 'Роль', 'descr' => 'Опис'];
-  $new = [];
-  foreach ($cols as $k=>$v) {
-    $new[$k] = $v;
-    if ($k === 'title') $new += $ins;
-  }
-  return $new;
-}
-
-add_action('manage_ambassador_posts_custom_column', 'people_fill_cols', 10, 2);
-add_action('manage_expert_posts_custom_column',     'people_fill_cols', 10, 2);
-function people_fill_cols($col, $post_id) {
-  if ($col === 'role')  echo esc_html(get_post_meta($post_id, 'role',  true));
-  if ($col === 'descr') echo esc_html(get_post_meta($post_id, 'descr', true));
-}
-
-add_filter('manage_edit-ambassador_sortable_columns', 'people_sortable_cols');
-add_filter('manage_edit-expert_sortable_columns',     'people_sortable_cols');
-function people_sortable_cols($cols) {
-  $cols['role']  = 'role';
-  $cols['descr'] = 'descr';
-  return $cols;
-}
-
-/**
- * Сортування по meta (для обох CPT)
- */
-add_action('pre_get_posts', function ($q) {
-  if (!is_admin() || !$q->is_main_query()) return;
-  if (!in_array($q->get('post_type'), ['ambassador','expert'], true)) return;
-
-  $orderby = $q->get('orderby');
-  if ($orderby === 'role' || $orderby === 'descr') {
-    $q->set('meta_key', $orderby);
-    $q->set('orderby', 'meta_value'); // meta_value_num для чисел
-  }
-});
-
-/**
- * Quick Edit (поля + збереження) — для обох CPT
- */
-add_action('quick_edit_custom_box', function($col, $post_type){
-  if (!in_array($post_type, ['ambassador','expert'], true)) return;
-  if (!in_array($col, ['role','descr'], true)) return; ?>
-  <fieldset class="inline-edit-col-left">
-    <div class="inline-edit-col">
-      <?php if ($col==='role'): ?>
-        <label><span class="title">Роль</span>
-          <span class="input-text-wrap"><input type="text" name="role" value=""></span>
-        </label>
-      <?php else: ?>
-        <label><span class="title">Опис</span>
-          <span class="input-text-wrap"><input type="text" name="descr" value=""></span>
-        </label>
-      <?php endif; ?>
-    </div>
-  </fieldset>
-<?php }, 10, 2);
-
-add_action('save_post_ambassador', 'people_save_qe');
-add_action('save_post_expert',     'people_save_qe');
-function people_save_qe($post_id){
-  if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-  if (!current_user_can('edit_post', $post_id)) return;
-  foreach (['role','descr'] as $k){
-    if (isset($_POST[$k])) update_post_meta($post_id, $k, sanitize_text_field($_POST[$k]));
-  }
-}
-
-/**
- * Підставити значення у форму Quick Edit (JS) — для обох CPT
- */
-add_action('admin_print_footer_scripts-edit.php', function () {
-  $screen = get_current_screen();
-  if (!$screen || !in_array($screen->post_type, ['ambassador','expert'], true)) return; ?>
-<script>
-jQuery(function($){
-  var $wp_inline_edit = inlineEditPost.edit;
-  inlineEditPost.edit = function(id){
-    $wp_inline_edit.apply(this, arguments);
-    var postId = (typeof(id)==='object') ? this.getId(id) : id;
-    if (!postId) return;
-
-    var $row = $('#post-'+postId);
-    var role = $('.column-role',  $row).text().trim();
-    var descr = $('.column-descr', $row).text().trim();
-
-    var $qe = $('#edit-'+postId);
-    $('input[name="role"]',  $qe).val(role);
-    $('input[name="descr"]', $qe).val(descr);
-  };
-});
-</script>
-<?php });

@@ -57,7 +57,7 @@ registerBlockType('parts-blocks/consent-checkbox', {
 								placeholder="Текст до посилання…"
 								allowedFormats={[]} // простий текст
 							/>
-							<a className="cc-link" href={linkUrl} target="_blank" rel="noopener">
+							<a className="cc-link" href="" rel="noopener" onClick={(e) => e.preventDefault()}>
 								<RichText
 								tagName="span"
 								className="cc-link__text"
@@ -97,10 +97,10 @@ registerBlockType('parts-blocks/consent-checkbox', {
           /> 
           <div>
             <span className="cc-text cc-text--before">{labelBefore} </span>
-            {/* <a className="cc-link" href={linkUrl} target="_blank" rel="noopener">
+            <a className="cc-link" href={linkUrl} target="_blank" rel="noopener">
               <span className="cc-link__text">{linkText}</span>
             </a>
-            <span className="cc-text cc-text--after">{labelAfter}</span> */}
+            <span className="cc-text cc-text--after">{labelAfter}</span>
           </div>
 				</label>
 			</div>

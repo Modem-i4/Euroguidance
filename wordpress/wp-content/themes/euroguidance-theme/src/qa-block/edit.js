@@ -5,16 +5,20 @@ export default function Edit({ attributes, setAttributes }) {
   const { question, answer } = attributes;
 
   const [isOpen, setIsOpen] = useState(false);
-  const onToggle = useCallback(() => setIsOpen(v => !v), []);
+  const onToggle = useCallback(() => setIsOpen((v) => !v), []);
 
   const blockProps = useBlockProps({
     className: `qa-item ${isOpen ? 'is-open' : ''}`,
-    'aria-expanded': isOpen ? 'true' : 'false'
   });
 
   return (
     <div {...blockProps}>
-      <button type="button" className="qa-summary" onClick={onToggle}>
+      <button
+        type="button"
+        className="qa-summary"
+        aria-expanded={isOpen ? 'true' : 'false'}
+        onClick={onToggle}
+      >
         <span className="qa-arrow" aria-hidden="true" />
         <RichText
           tagName="span"
@@ -27,7 +31,7 @@ export default function Edit({ attributes, setAttributes }) {
         />
       </button>
 
-      <div className="qa-content">
+      <div className="qa-content" hidden={!isOpen}>
         <div className="qa-content-inner">
           <RichText
             tagName="div"

@@ -1,0 +1,14 @@
+.ambasadors__text-image {
+	background: linear-gradient(84deg, #7abf92 0%, #4a78a1 100%);
+	color: white;
+	position: absolute !important;
+	width: 90%;
+	bottom: 5%;
+	left: 5%;
+}
+.ambasadors__image-wrapper {
+	position: relative !important;
+}
+.ambasadors__list-wrapper > ul > li:last-child > div {
+    border: none !important;
+}
