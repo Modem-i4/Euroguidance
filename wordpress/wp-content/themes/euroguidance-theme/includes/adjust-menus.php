@@ -71,7 +71,7 @@ add_action('admin_menu', function () {
     remove_submenu_page('index.php', 'update-core.php');
 
     // Сховати підменю "Категорії" та "Позначки" у "Записах"
-    remove_submenu_page('edit.php', 'edit-tags.php?taxonomy=category');
+    // remove_submenu_page('edit.php', 'edit-tags.php?taxonomy=category');
     remove_submenu_page('edit.php', 'edit-tags.php?taxonomy=post_tag');
 }, 999);
 
@@ -92,3 +92,51 @@ add_action('admin_head', function() {
 });
 
 add_post_type_support( 'page', 'excerpt' );
+
+// Radio у "Категоріях" + коректний checked
+add_filter('wp_terms_checklist_args', function ($args, $post_id) {
+    if (($args['taxonomy'] ?? '') !== 'category') return $args;
+
+    // 1) Надійно беремо ID поста (бо $post_id тут часто 0)
+    $pid = (int)$post_id;
+    if (!$pid) {
+        global $post;
+        if (!empty($post->ID))            $pid = (int)$post->ID;
+        if (!$pid && !empty($_GET['post']))   $pid = (int)$_GET['post'];
+        if (!$pid && !empty($_POST['post_ID'])) $pid = (int)$_POST['post_ID'];
+    }
+
+    // 2) Якщо у формі вже щось вибрали — показуємо це; інакше тягнемо з БД (1-а категорія)
+    if (isset($_POST['tax_input']['category'])) {
+        $sel = (array) $_POST['tax_input']['category'];
+    } else {
+        $sel = $pid ? wp_get_object_terms($pid, 'category', ['fields' => 'ids']) : [];
+    }
+    $args['selected_cats'] = array_map('intval', (array)$sel);
+
+    // 3) Власний walker: radio + проставляємо checked
+    if (!class_exists('Walker_Cat_Radio_Min')) {
+        class Walker_Cat_Radio_Min extends Walker_Category_Checklist {
+            public function start_el(&$out, $term, $depth = 0, $a = [], $id = 0){
+                $tax = $a['taxonomy'] ?? 'category';
+                $name = 'tax_input['.$tax.'][]';          // лишаємо масивне ім'я
+                $idat = 'in-'.$tax.'-'.$term->term_id;
+                $checked = in_array((int)$term->term_id, array_map('intval', (array)($a['selected_cats'] ?? [])));
+
+                $out .= '<li id="'.esc_attr($tax.'-'.$term->term_id).'"><label class="selectit" for="'.esc_attr($idat).'">';
+                $out .= '<input type="radio" id="'.esc_attr($idat).'" name="'.esc_attr($name).'" value="'.esc_attr($term->term_id).'" '.($checked ? 'checked="checked"' : '').' /> ';
+                $out .= esc_html($term->name).'</label>';
+            }
+            public function end_el(&$out,$term,$depth=0,$a=[]){ $out .= "</li>\n"; }
+        }
+    }
+    $args['walker'] = new Walker_Cat_Radio_Min();
+    $args['checked_ontop'] = false;
+    return $args;
+}, 10, 2);
+
+add_action('admin_head', function(){ ?>
+  <style>
+    /**/
+  </style>
+<?php });
