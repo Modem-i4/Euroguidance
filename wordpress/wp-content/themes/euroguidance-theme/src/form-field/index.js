@@ -143,20 +143,31 @@ registerBlockType(metadata.name, {
       </div>
     );
   },
+save({ attributes }) {
+  const {
+    variant, label, name, placeholder, required, inputType, rows
+  } = attributes;
 
-  save({ attributes }) {
-    const {
-      variant, label, name, placeholder, required, inputType, rows
-    } = attributes;
+  const blockProps = useBlockProps.save({
+    className: `form-component is-${variant}`
+  });
 
-    const blockProps = useBlockProps.save({
-      className: `form-component is-${variant}`
-    });
-
-    if (variant === 'input') {
-      return (
-        <div {...blockProps}>
-          {label ? <label className="fc-label">{label}</label> : null}
+  if (variant === 'input') {
+    return (
+      <div {...blockProps}>
+        {label ? (
+          <label className="fc-label">
+            {label}
+            <input
+              className="fc-input"
+              type={inputType || 'text'}
+              name={name || ''}
+              placeholder={placeholder || ''}
+              required={!!required}
+              data-form-input="1"
+            />
+          </label>
+        ) : (
           <input
             className="fc-input"
             type={inputType || 'text'}
@@ -165,14 +176,27 @@ registerBlockType(metadata.name, {
             required={!!required}
             data-form-input="1"
           />
-        </div>
-      );
-    }
+        )}
+      </div>
+    );
+  }
 
-    if (variant === 'textarea') {
-      return (
-        <div {...blockProps}>
-          {label ? <label className="fc-label">{label}</label> : null}
+  if (variant === 'textarea') {
+    return (
+      <div {...blockProps}>
+        {label ? (
+          <label className="fc-label">
+            {label}
+            <textarea
+              className="fc-textarea"
+              name={name || ''}
+              placeholder={placeholder || ''}
+              rows={rows || 4}
+              required={!!required}
+              data-form-input="1"
+            />
+          </label>
+        ) : (
           <textarea
             className="fc-textarea"
             name={name || ''}
@@ -181,8 +205,9 @@ registerBlockType(metadata.name, {
             required={!!required}
             data-form-input="1"
           />
-        </div>
-      );
-    }
+        )}
+      </div>
+    );
   }
+}
 });

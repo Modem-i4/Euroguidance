@@ -6,22 +6,12 @@
   "icon": "media-document",
   "description": "Картка з назвою, зображенням та файлом.",
   "attributes": {
-    "title": { 
-      "type": "string",
-      "default": ""
-    },
-    "file": {
-      "type": "string",
-      "default": ""
-    },
-    "imageUrl": {
-      "type": "string",
-      "default": ""
-    }
+    "title": { "type": "string", "default": "" },
+    "file":  { "type": "string", "default": "" },
+    "imageUrl": { "type": "string", "default": "" },
+    "activeAttachment": { "type": "string", "default": "file" } 
   },
-  "supports": {
-    "html": false
-  },
+  "supports": { "html": false },
   "editorScript": "file:./index.js",
-	"style": "file:./style-index.css"
+  "style": "file:./style-index.css"
 }

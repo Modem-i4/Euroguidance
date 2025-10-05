@@ -1,5 +1,4 @@
 div.useful-link-card {
-    border-radius: 20px;
     overflow: hidden;
     min-height: 240px;
     min-width: 224px;
@@ -32,7 +31,7 @@ div.useful-link-card {
 }
 
 .search-block-wrapper {
-  width: 40%;
+  width: 50%;
   margin-right: auto;
   margin-left: auto;
 }
@@ -46,7 +45,11 @@ div.useful-link-card {
 }
 
 .search-block__input {
-  border-radius: 200px;
+  border-radius: 0;
+}
+
+.search-input-wrapper {
+  box-shadow: 0px 4px 8px 3px #00000026;
 }
 
 @media (max-width: 800px) {

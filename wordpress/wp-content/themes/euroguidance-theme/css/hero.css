@@ -19,13 +19,11 @@
 	border-radius: 4px;
 	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 	transition:
-		transform 0.15s ease,
-		/* filter 0.15s ease, */ box-shadow 0.15s ease;
+		transform 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
 }
 .hero-btn .wp-block-button a:hover {
-    background-color: #ffdd31 !important;
-	/* filter: brightness(0.94); */
 	transform: translateY(-3px);
+	color: #424241 !important;
 	box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.25);
 }
 

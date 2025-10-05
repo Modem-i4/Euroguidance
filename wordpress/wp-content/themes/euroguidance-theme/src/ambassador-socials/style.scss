@@ -1,0 +1,117 @@
+/* ряд іконок */
+.ntd-social-links__row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-start !important; /* було start */
+  gap:1rem !important;
+  margin:0;
+  padding:0;
+  width:auto;
+}
+
+/* кнопка-іконка та плюс */
+.ntd-social-links__btn,
+.ntd-social-links__add{
+  flex:0 0 auto;
+  width:36px;                       /* базово квадрат */
+  height:36px;
+  padding:0 !important;
+  border:0;
+  border-radius:0 !important;
+  display:inline-flex;
+  align-items:center;               /* було додано */
+  justify-content:center;
+  background:#82b58c !important;
+  color:#fff !important;
+  text-decoration:none;             /* було додано */
+  line-height:0;                    /* було додано */
+  cursor:pointer;
+}
+
+/* Плюс */
+.ntd-social-links__add{
+  background:#e5e5ea !important;
+  color:#2c2f36 !important;
+}
+
+/* Розмір піктограм та запобігання розтягуванню */
+.ntd-social-links__btn svg,
+.ntd-social-links__add svg{
+  display:block;                    /* було додано */
+  width:24px;
+  height:24px;
+  flex:0 0 24px;
+}
+
+/* ===== ПІДПИС ТА "ГУМОВІ" КНОПКИ ===================================== */
+
+/* Коли є підпис — даємо клас .has-label (додається у PHP/JS) */
+.ntd-social-links__btn.has-label{
+  /* важливо: кнопка розширюється під контент, але не менше квадрата */
+  width:auto !important;
+  min-width:36px;
+  line-height:1;                    /* щоб текст не обрізався */
+  padding:0 10px !important;        /* горизонтальний відступ під текст */
+  gap:8px;                          /* відступ між іконкою та текстом */
+  white-space:nowrap;               /* підпис в один рядок */
+}
+
+/* Без підпису — суворо квадрат */
+.ntd-social-links__btn:not(.has-label){
+  width:36px !important;
+  padding:0 !important;
+}
+
+/* Текст підпису */
+.ntd-social-links__label{
+  display:inline-block;
+  font-size:14px;
+  line-height:1;
+  color:inherit;                    /* успадковує білий/зелений */
+}
+
+/* Допоміжне вирівнювання елемента (контейнер однієї кнопки) */
+.ntd-social-links__item{
+  display:inline-flex;
+  align-items:center;
+}
+
+/* Стан фокусу (доступність) */
+.ntd-social-links__btn:focus-visible,
+.ntd-social-links__add:focus-visible{
+  outline:2px solid #2c7a5b;
+  outline-offset:2px;
+}
+
+/* === Глобальний режим з підписами: збільшені розміри ================== */
+.ntd-social-links--labels{
+  /* трохи більший вертикальний ритм */
+  .ntd-social-links__row{ gap: 1.1rem !important; }
+
+  /* усі кнопки стають вищими/ширшими */
+  .ntd-social-links__btn,
+  .ntd-social-links__add{
+    height: 44px;                 /* було 36 */
+    min-width: 44px;              /* квадрат без підпису */
+  }
+
+  /* більша іконка */
+  .ntd-social-links__btn svg,
+  .ntd-social-links__add svg{
+    width: 28px;                  /* було 24 */
+    height: 28px;
+    flex: 0 0 28px;
+  }
+
+  /* коли є підпис — більше повітря */
+  .ntd-social-links__btn.has-label{
+    padding: 0 12px !important;   /* було 0 10px */
+    gap: 10px;                    /* було 8px */
+  }
+
+  /* більший шрифт підпису */
+  .ntd-social-links__label{
+    font-size: 15px;              /* було 14px */
+    line-height: 1.2;
+  }
+}

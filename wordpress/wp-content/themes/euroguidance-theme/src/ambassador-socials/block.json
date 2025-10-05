@@ -1,0 +1,25 @@
+{
+  "apiVersion": 3,
+  "name": "ntd/social-links",
+  "title": "Соціальні мережі для розробника (meta)",
+  "description": "Редактор лінків соцмереж у метаданих запису. Працює в контексті Query Loop.",
+  "category": "widgets",
+  "icon": "share",
+  "textdomain": "ntd",
+  "supports": {
+    "html": false,
+    "multiple": true,
+    "inserter": true
+  },
+  "usesContext": [ "postId", "postType" ],
+  "attributes": {
+    "showLabels": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css",
+  "editorStyle": "file:./index.css",
+  "render": "file:./render.php"
+}

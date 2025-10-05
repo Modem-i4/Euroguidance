@@ -37,7 +37,7 @@
 .consent-checkbox .cc-input:checked{
   background:
     url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 10"><path d="M1 5l3 3 7-7" stroke="%23fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center 55%/10px 10px no-repeat,
-    linear-gradient(45deg, #7b61ff, #6C3088);
+    #7ABF92;
   box-shadow: inset 0 0 0 2px #fff;
 }
 
@@ -59,7 +59,7 @@
 .consent-checkbox .cc-input:focus{
   outline:none;
   box-shadow: 0 0 0 2px rgba(123,97,255,.25), inset 0 0 0 2px #fff;
-  border-color:#7b61ff;
+  border-color:#7ABF92;
 }
 
 /* Лейбл і тексти */

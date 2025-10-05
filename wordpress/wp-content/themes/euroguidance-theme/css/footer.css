@@ -1,22 +1,24 @@
-.footer-wrapper {
-	background: linear-gradient(84deg, #7abf92 0%, #4a78a1 100%);
-}
 .footer-wrapper::before {
-	content: "";
-	position: absolute;
-	width: 100%;
-	height: calc(100% + 200px);
-	background: linear-gradient(84deg, #7abf92 0%, #4a78a1 100%);
-	bottom: 0;
-	left: 0;
-	z-index: -2;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: calc(100% + 400px); /* вилазимо над футером на 200px */
+  bottom: 0;
+  left: 0;
+  z-index: -2;
+
+  background:
+    linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0) 100%) top / 100% 400px no-repeat,
+    linear-gradient(84deg, #7abf92 0%, #4a78a1 100%);
+}
+
+	/* background: linear-gradient(84deg, #7abf92 0%, #4a78a1 100%);
 	clip-path: polygon(
 		0 8%,
-		/* верх-ліво нижче */ 100% 0,
-		/* верх-право вище */ 100% 100%,
-		/* низ-право */ 0 100% /* низ-ліво */
-	);
-}
+		100% 0,
+		 100% 100%,
+		 0 100%
+	); */
 
 .wp-block-navigation
 	> .wp-block-navigation__container

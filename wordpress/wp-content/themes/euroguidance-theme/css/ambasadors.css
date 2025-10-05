@@ -12,3 +12,14 @@
 .ambasadors__list-wrapper > ul > li:last-child > div {
     border: none !important;
 }
+
+.amb-info .wp-block-media-text {
+	min-width: 0;
+}
+
+@media (max-width: 780px) {
+	.ambassador-card {
+		flex-wrap: wrap;
+    	align-items: center !important;
+	}
+}
