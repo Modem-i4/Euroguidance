@@ -132,7 +132,18 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos($_SERVER['HTTP_X_FORWARD
 if ($configExtra = getenv_docker('WORDPRESS_CONFIG_EXTRA', '')) {
 	eval($configExtra);
 }
+// ---- DEBUG START ----
+define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);           // Логи у wp-content/debug.log
+define('WP_DEBUG_DISPLAY', true);       // Показувати на сторінці (на проді краще false)
+define('SCRIPT_DEBUG', true);
+define('SAVEQUERIES', true);            // Опціонально: лог запитів MySQL
+@ini_set('display_errors', 1);
+@ini_set('log_errors', 1);
 
+// Опціонально: вимкнути "екран критичної помилки" і показати сирий фатал від PHP
+define('WP_DISABLE_FATAL_ERROR_HANDLER', true);
+// ---- DEBUG END ----
 /* That's all, stop editing! Happy publishing. */
 
 /** Absolute path to the WordPress directory. */
@@ -142,3 +153,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** Sets up WordPress vars and included files. */
 require_once ABSPATH . 'wp-settings.php';
+
+
