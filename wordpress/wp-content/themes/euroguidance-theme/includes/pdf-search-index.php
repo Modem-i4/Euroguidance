@@ -56,3 +56,96 @@ add_filter('the_posts', function ($posts, $q) {
 
     return $posts;
 }, 10, 2);
+
+
+
+
+
+
+
+
+
+
+
+
+// Допоміжна: чи ми в контексті сторінки новин (/news/)
+function ntd_is_news_search_context(): bool {
+    // Базовий шлях для /news/ (враховує можливі префікси, сабдиректрії сайту тощо)
+    $news_path = parse_url( home_url( '/news/' ), PHP_URL_PATH );
+    $req_path  = isset($_SERVER['REQUEST_URI']) ? wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '';
+
+    // Починається з /news/
+    if ($news_path && $req_path && strpos(trailingslashit($req_path), trailingslashit($news_path)) === 0) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 1) Перенаправляємо кліки на посилання категорій у пошуку новин
+ *    Замість архіву категорії -> на /news/?s=…&cat=…
+ */
+add_filter('term_link', function ($termlink, $term, $taxonomy) {
+    if ($taxonomy !== 'category') return $termlink;
+    if (!is_search())             return $termlink;
+    if (!ntd_is_news_search_context()) return $termlink; // лише в /news/
+
+    $s = isset($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
+
+    // База — /news/
+    $base = home_url('/news/');
+    return add_query_arg([
+        's'   => $s,
+        'cat' => (int) $term->term_id,
+    ], $base);
+}, 10, 3);
+
+/**
+ * 1) Перенаправляємо кліки на посилання категорій у контексті /news/
+ *    Замість архіву категорії -> на /news/?s=…&cat=…
+ *    ВАЖЛИВО: без is_search(), з високим пріоритетом (99)
+ */
+add_filter('term_link', function ($termlink, $term, $taxonomy) {
+    if ($taxonomy !== 'category') return $termlink;
+    if (!ntd_is_news_search_context()) return $termlink; // лише коли ми на /news/
+
+    // Збережемо поточний s (може бути й порожній — нам ок)
+    $s = isset($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
+
+    return add_query_arg([
+        's'   => $s,
+        'cat' => (int) $term->term_id,
+    ], home_url('/news/'));
+}, 99, 3); // <-- пріоритет 99, щоб перебити інші фільтри
+
+
+/**
+ * 2) У блоці core/search на сторінці /news/:
+ *    - підкладаємо hidden поле cat (якщо є)
+ *    - форсимо action="/news/"
+ *    (post_type більше НЕ додаємо)
+ */
+add_filter('render_block', function ($content, $block) {
+    if (($block['blockName'] ?? '') !== 'core/search') return $content;
+    if (!ntd_is_news_search_context())                 return $content;
+
+    $cat = (int) ( get_query_var('cat') ?: ($_GET['cat'] ?? 0) );
+
+    if ($cat) {
+        $content = preg_replace('~</form>~', '<input type="hidden" name="cat" value="'.(int)$cat.'"></form>', $content, 1);
+    }
+
+    // Примусово action="/news/"
+    $content = preg_replace_callback('~<form\b([^>]*)>~i', function ($m) {
+        $attrs  = $m[1];
+        $target = ' action="'.esc_url(home_url('/news/')).'"';
+        if (preg_match('~\saction=("|\')[^"\']*\1~i', $attrs)) {
+            $attrs = preg_replace('~\saction=("|\')[^"\']*\1~i', $target, $attrs);
+        } else {
+            $attrs .= $target;
+        }
+        return '<form' . $attrs . '>';
+    }, $content, 1);
+
+    return $content;
+}, 10, 2);

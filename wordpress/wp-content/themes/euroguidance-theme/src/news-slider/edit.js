@@ -130,7 +130,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 return (
                   <div key={post.id} className="news-latest-card swiper-slide">
-                    <div class="card-wrapper">
+                    <div className="card-wrapper">
                       <div className="card-image-wrapper">
                         {image ? (
                           <img src={image} alt={title} className="card-image" />
@@ -157,9 +157,28 @@ export default function Edit({ attributes, setAttributes, clientId }) {
           </div>
         </div>
 
-        <div className="swiper-button-prev"></div>
-        <div className="swiper-button-next"></div>
-        <div className="swiper-pagination"></div>
+        {/* НОВІ нижні контролі без пагінації */}
+        <div className="ntd-news-carousel__controls">
+          <button
+            className="ntd-news-carousel__nav is-prev"
+            type="button"
+            aria-label="Попередня сторінка"
+          />
+          <button
+            className="ntd-news-carousel__more"
+            type="button"
+            aria-label="Показати більше"
+            disabled
+            title="Кнопка-плейсхолдер у редакторі"
+          >
+            Більше
+          </button>
+          <button
+            className="ntd-news-carousel__nav is-next"
+            type="button"
+            aria-label="Наступна сторінка"
+          />
+        </div>
       </div>
     </>
   );

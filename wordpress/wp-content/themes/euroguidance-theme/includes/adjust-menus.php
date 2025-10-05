@@ -13,6 +13,26 @@ add_action('init', function () {
 	}
 }, 100);
 
+
+// Повністю ховаємо інтерфейс "Позначок" і забираємо їх з усіх типів записів.
+add_filter('register_taxonomy_args', function ($args, $taxonomy) {
+	if ($taxonomy === 'post_tag') {
+		$args['show_ui']      = false;   // немає меню і екранів керування
+		$args['show_in_rest'] = false;   // зникає панель у Гутенберзі
+		$args['meta_box_cb']  = false;   // не показувати метабокс (класичний редактор)
+	}
+	return $args;
+}, 10, 2);
+
+add_action('init', function () {
+	// Знімаємо привʼязку таксономії "post_tag" з усіх CPT (надійно, якщо десь вона була ввімкнена).
+	foreach (get_post_types([], 'names') as $pt) {
+		unregister_taxonomy_for_object_type('post_tag', $pt);
+	}
+}, 100);
+
+
+
 // 2) Закриваємо коментарі і пінги на рівні фільтрів
 add_filter('comments_open', '__return_false', 20, 2);
 add_filter('pings_open', '__return_false', 20, 2);
@@ -76,6 +96,7 @@ add_action('admin_menu', function () {
 }, 999);
 
 
+
 // Видаляємо "Переглянути" з дій у списку користувачів
 add_filter( 'user_row_actions', function( $actions, $user ) {
     if ( isset( $actions['view'] ) ) {
@@ -93,50 +114,71 @@ add_action('admin_head', function() {
 
 add_post_type_support( 'page', 'excerpt' );
 
-// Radio у "Категоріях" + коректний checked
-add_filter('wp_terms_checklist_args', function ($args, $post_id) {
-    if (($args['taxonomy'] ?? '') !== 'category') return $args;
 
-    // 1) Надійно беремо ID поста (бо $post_id тут часто 0)
-    $pid = (int)$post_id;
-    if (!$pid) {
-        global $post;
-        if (!empty($post->ID))            $pid = (int)$post->ID;
-        if (!$pid && !empty($_GET['post']))   $pid = (int)$_GET['post'];
-        if (!$pid && !empty($_POST['post_ID'])) $pid = (int)$_POST['post_ID'];
-    }
 
-    // 2) Якщо у формі вже щось вибрали — показуємо це; інакше тягнемо з БД (1-а категорія)
-    if (isset($_POST['tax_input']['category'])) {
-        $sel = (array) $_POST['tax_input']['category'];
-    } else {
-        $sel = $pid ? wp_get_object_terms($pid, 'category', ['fields' => 'ids']) : [];
-    }
-    $args['selected_cats'] = array_map('intval', (array)$sel);
 
-    // 3) Власний walker: radio + проставляємо checked
-    if (!class_exists('Walker_Cat_Radio_Min')) {
-        class Walker_Cat_Radio_Min extends Walker_Category_Checklist {
-            public function start_el(&$out, $term, $depth = 0, $a = [], $id = 0){
-                $tax = $a['taxonomy'] ?? 'category';
-                $name = 'tax_input['.$tax.'][]';          // лишаємо масивне ім'я
-                $idat = 'in-'.$tax.'-'.$term->term_id;
-                $checked = in_array((int)$term->term_id, array_map('intval', (array)($a['selected_cats'] ?? [])));
 
-                $out .= '<li id="'.esc_attr($tax.'-'.$term->term_id).'"><label class="selectit" for="'.esc_attr($idat).'">';
-                $out .= '<input type="radio" id="'.esc_attr($idat).'" name="'.esc_attr($name).'" value="'.esc_attr($term->term_id).'" '.($checked ? 'checked="checked"' : '').' /> ';
-                $out .= esc_html($term->name).'</label>';
-            }
-            public function end_el(&$out,$term,$depth=0,$a=[]){ $out .= "</li>\n"; }
-        }
-    }
-    $args['walker'] = new Walker_Cat_Radio_Min();
-    $args['checked_ontop'] = false;
-    return $args;
-}, 10, 2);
+// // Radio у "Категоріях" + коректний checked + інлайн-клік у рендері
+// add_filter('wp_terms_checklist_args', function ($args, $post_id) {
+//     if (($args['taxonomy'] ?? '') !== 'category') return $args;
 
-add_action('admin_head', function(){ ?>
-  <style>
-    /**/
-  </style>
-<?php });
+//     // Надійно беремо ID поста
+//     $pid = (int)$post_id;
+//     if (!$pid) {
+//         global $post;
+//         if (!empty($post->ID))                  $pid = (int)$post->ID;
+//         if (!$pid && !empty($_GET['post']))     $pid = (int)$_GET['post'];
+//         if (!$pid && !empty($_POST['post_ID'])) $pid = (int)$_POST['post_ID'];
+//     }
+
+//     // Якщо у формі щось вибрали — показуємо це; інакше — з БД
+//     if (isset($_POST['tax_input']['category'])) {
+//         $sel = (array) $_POST['tax_input']['category'];
+//     } else {
+//         $sel = $pid ? wp_get_object_terms($pid, 'category', ['fields' => 'ids']) : [];
+//     }
+//     $args['selected_cats'] = array_map('intval', (array)$sel);
+
+//     // Власний walker: radio + проставляємо checked + інлайн-клік
+//     if (!class_exists('Walker_Cat_Radio_Min')) {
+//         class Walker_Cat_Radio_Min extends Walker_Category_Checklist {
+//             public function start_el(&$out, $term, $depth = 0, $a = [], $id = 0){
+//                 $tax      = $a['taxonomy'] ?? 'category';
+//                 $name     = 'tax_input['.$tax.'][]';
+//                 $input_id = 'in-'.$tax.'-'.$term->term_id;
+
+//                 $selected = array_map('intval', (array)($a['selected_cats'] ?? []));
+//                 $checked  = in_array((int)$term->term_id, $selected, true);
+
+//                 $out .= '<li id="'.esc_attr($tax.'-'.$term->term_id).'"><label class="selectit" for="'.esc_attr($input_id).'">';
+//                 $out .= '<input type="radio" id="'.esc_attr($input_id).'" name="'.esc_attr($name).'" value="'.esc_attr($term->term_id).'" '.($checked ? 'checked="checked"' : '').' /> ';
+//                 $out .= esc_html($term->name).'</label>';
+
+//                 // Клік по [checked] ТІЛЬКИ якщо в ul немає реального :checked (ігноруємо старий HTML-атрибут)
+//                 if ($checked) {
+//                     $id_js = esc_js($input_id);
+//                     $out  .= '<script>(function(){'
+//                            . 'var run=function(){'
+//                            . '  var el=document.getElementById("'.$id_js.'"); if(!el) return;'
+//                            . '  var ul=el.closest("ul"); if(!ul) return;'
+//                            . '  if(ul.querySelector(\'input[type="radio"]:checked\')) return;'
+//                            . '  try{el.click();}catch(e){el.checked=true;el.dispatchEvent(new Event("change",{bubbles:true}));}'
+//                            . '};'
+//                            // невелика серія перевірок: 30ms, 120ms (щоб дочекатись актуального :checked від Quick Edit)
+//                            . 'setTimeout(run,30); setTimeout(run,120);'
+//                            . '})();</script>';
+//                 }
+//             }
+//             public function end_el(&$out,$term,$depth=0,$a=[]){ $out .= "</li>\n"; }
+//         }
+//     }
+
+//     $args['walker'] = new Walker_Cat_Radio_Min();
+//     $args['checked_ontop'] = false;
+//     return $args;
+// }, 10, 2);
+
+
+
+
+

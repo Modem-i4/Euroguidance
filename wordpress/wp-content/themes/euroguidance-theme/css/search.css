@@ -150,7 +150,6 @@ body.has-empty-search .search-title--empty { display:block !important; }
 /* Внутрішні колонки (ПК) */
 .search-page-search .search-input-wrapper .wp-block-columns{
   align-items:center;
-  gap:12px;
   padding:14px 16px;
 }
 
@@ -168,11 +167,11 @@ body.has-empty-search .search-title--empty { display:block !important; }
 /* Категорії */
 .search-page-search .wp-block-categories{
   margin:0; padding:0; list-style:none;
-  display:flex; align-items:center; gap:28px; flex-wrap:wrap;
+  display:flex; align-items:center; gap:28px; flex-wrap:wrap; 
 }
 .search-page-search .wp-block-categories a{
   text-decoration:none; font-weight:800; color:var(--muted);
-  padding:6px 0; transition:color .15s ease;
+  transition:color .15s ease;
 }
 .search-page-search .wp-block-categories a:hover,
 .search-page-search .wp-block-categories .current-cat > a{ color:var(--text); }
@@ -206,6 +205,53 @@ body.has-empty-search .search-title--empty { display:block !important; }
   box-shadow:0 6px 14px rgba(47,133,64,.28);
 }
 
+/* Лейбл-скрінрідер */
+.search-page-search .wp-block-search__label.screen-reader-text{
+  clip:rect(1px,1px,1px,1px); position:absolute!important; height:1px; width:1px; overflow:hidden;
+}
+
+.show-all-btn {
+  cursor: pointer;
+}
+
+.search-page-search .wp-block-categories .cat-item > a{
+  height: 88px;
+  display: inline-flex;
+  align-items: center;
+}
+/* Активна категорія — як ліва вкладка "Всі" */
+.search-page-search .wp-block-categories .cat-item.is-active > a{
+  padding: 0 18px;           /* бокові відступи */
+  margin: -14px 0;           /* "з’їдаємо" вертикальний паддінг .wp-block-columns */
+  background: var(--green);
+  color: #fff !important;
+  border-radius: 0;          /* квадратні кути як у "Всі" */
+  box-shadow: none;          /* без тіні */
+}
+
+/* Базові (неактивні) посилання як були */
+.search-page-search .wp-block-categories a{
+  font-weight: 800;
+  color: var(--muted);
+}
+.search-page-search .wp-block-categories a:hover{
+  color: var(--text);
+}
+
+/* На мобільному краще не ламати вертикальний ритм */
+@media (max-width:781.98px){
+  .search-page-search .wp-block-categories .cat-item.is-active > a{
+    height: auto;
+    margin: 0;
+  }
+}
+
+/* Коли вибрана інша категорія (тобто .show-all-btn без .is-active) */
+.search-page-search .show-all-btn:not(.is-active){
+  background-color:#d5e6d8 !important;
+  color:var(--muted) !important;  
+}
+
 /* ---------- Мобільний (<782px) ---------- */
 @media (max-width:781.98px){
   .search-page-search .search-input-wrapper{ transform:none; position:static; }
@@ -228,9 +274,4 @@ body.has-empty-search .search-title--empty { display:block !important; }
     display:inline-block; margin:12px auto 0; width:auto; padding:0 22px;
     position:relative; left:50%; transform:translateX(-50%);
   }
-}
-
-/* Лейбл-скрінрідер */
-.search-page-search .wp-block-search__label.screen-reader-text{
-  clip:rect(1px,1px,1px,1px); position:absolute!important; height:1px; width:1px; overflow:hidden;
 }

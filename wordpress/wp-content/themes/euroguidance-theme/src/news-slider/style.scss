@@ -1,69 +1,108 @@
-/* Контейнер слайдера */
-.news-slider.swiper { position: relative; padding: 8px 8px 56px; }
-
-/* Слайд = картка */
-.news-latest-card { height: auto; }
-
-.news-latest-card .card-wrapper{
-  display:flex; flex-direction:column;
-  background:#efeff2;
-  border:2px solid transparent;
-  border-radius:10px;
-  box-shadow:0 8px 18px rgba(0,0,0,.12);
-  overflow:hidden;
-  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-.news-latest-card:hover .card-wrapper,
-.news-latest-card:focus-within .card-wrapper{
-  transform: translateY(-2px);
-  border-color:#2f8540;
-  box-shadow:0 14px 28px rgba(0,0,0,.18);
+/* ==== базова обгортка слайдера ==== */
+.swiper-container {
+  position: relative;
+  overflow: visible;
 }
 
-/* Зображення */
-.card-image-wrapper{ aspect-ratio: 16/9; overflow:hidden; }
-.card-image{ width:100%; height:100%; object-fit:cover; display:block; }
+/* сам слайдер */
+.news-slider.swiper {
+  position: relative;
 
-/* Тонка градієнтна смужка */
-.card-gradient-bar{ height:6px; background:linear-gradient(90deg,#7abf92 0%,#4a78a1 100%); }
-
-/* Контент */
-.card-content{ background:#efeff2; padding:18px 20px 22px; display:grid; gap:12px; }
-.card-meta{ display:flex; justify-content:space-between; align-items:center; font-size:14px; color:#6b6b6b; }
-.card-type{ background:#e7f1e9; color:#2f8540; border-radius:999px; padding:4px 10px; font-weight:600; }
-.card-title{ margin:0; font-size:clamp(20px,2.1vw,26px); line-height:1.25; color:#3c3c3c; }
-.card-excerpt{ margin:0; color:#555; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-
-/* Стрілки знизу по центру */
-.swiper-button-prev, .swiper-button-next{
-  --sz: 40px;
-  width:var(--sz); height:var(--sz);
-  border-radius:999px; background:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);
-  top:auto; bottom:6px; color:#2f8540;
-}
-.swiper-button-prev{ left:calc(50% - 80px); }
-.swiper-button-next{ right:calc(50% - 80px); }
-
-/* Пагінацію/прогрес повністю ховаємо (на всякий випадок) */
-.swiper-pagination,
-.swiper-pagination-progressbar,
-.swiper-scrollbar{ display:none !important; }
-
-/* Кнопка під слайдером */
-.news-slider__cta-wrap{ display:flex; justify-content:center; margin-top:14px; }
-.news-slider__cta{
-  display:inline-block; padding:12px 28px; border-radius:4px;
-  background:#6f8ea5; color:#fff; text-decoration:none; font-weight:700;
-  box-shadow:0 8px 18px rgba(0,0,0,.18);
-  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-}
-.news-slider__cta:hover, .news-slider__cta:focus-visible{
-  filter:brightness(1.05); transform:translateY(-1px);
-  box-shadow:0 12px 24px rgba(0,0,0,.22);
+  .swiper-wrapper {
+    align-items: stretch;
+    padding: 25px 0;
+  }
+  .swiper-slide { height: auto; }
 }
 
-/* Респонсив дрібниці */
-@media (max-width: 768px){
-  .news-slider.swiper{ padding-bottom:64px; }
+/* ==== нижня панель керування (без пагінації) ==== */
+.ntd-news-carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;          /* відстань між елементами знизу */
+  margin-top: .75rem;
+}
+
+/* ==== Стрілки: один набір подвійних шевронів, збільшена клікабельна зона ==== */
+.ntd-news-carousel__nav {
+  --nav-color: #575756;
+
+  background: transparent;
+  border: 0;
+  padding: 10px 16px;     /* велика клікабельна зона */
+  line-height: 1;
+  cursor: pointer;
+  color: var(--nav-color);
+  opacity: .9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  outline: none;
+  box-shadow: none;
+  transition: opacity .2s ease, transform .2s ease;
+
+  &:hover,
+  &:focus,
+  &:active {
+    opacity: 1;
+    outline: none;
+    box-shadow: none;
+  }
+
+  &::before,
+  &::after { content: none; }
+  &::marker { content: none; }
+
+  /* подвійні шеврони через маску */
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 12px;
+    background: currentColor;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg width='14' height='12' viewBox='0 0 14 12' fill='none' xmlns='http://www.w3.org/2000/svg'> <path d='M1 11.0005L6 6.00049L1 1.00049M8 11.0005L13 6.00049L8 1.00049' stroke='%235E5C54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/> </svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg width='14' height='12' viewBox='0 0 14 12' fill='none' xmlns='http://www.w3.org/2000/svg'> <path d='M1 11.0005L6 6.00049L1 1.00049M8 11.0005L13 6.00049L8 1.00049' stroke='%235E5C54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/> </svg>");
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
+  /* попередня — віддзеркалена */
+  &.is-prev::before { transform: scaleX(-1); }
+}
+
+/* ==== Кнопка "Більше" (як на скріні) ==== */
+.ntd-news-carousel__more {
+  --more-bg: #6f90a6; /* синьо-сірий прямокутник */
+  --more-text: #fff;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background: var(--more-bg);
+  color: var(--more-text);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px 2px #00000040;
+  transform: translateZ(0);
+  transition: filter .2s ease, transform .08s ease;
+
+  &:hover { filter: brightness(1.06); }
+  &:active { transform: translateY(1px); }
+  &:disabled { opacity: .65; cursor: default; }
+}
+
+/* респонсів */
+@media (max-width: 768px) {
+  .ntd-news-carousel__controls { gap: .75rem; }
+  .ntd-news-carousel__more { padding: 12px 22px; font-size: 16px; }
 }
