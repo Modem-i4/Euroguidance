@@ -15,7 +15,6 @@ wordpress/wp-content/debug.log
 *.tar.gz
 
 node_modules/
-vendor/
 .env
 .DS_Store
 Thumbs.db
