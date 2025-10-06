@@ -84,7 +84,7 @@ header .wp-block-navigation__responsive-dialog {
 	}
 	header .wp-block-navigation .wp-block-navigation-item:hover {
 		background-color: #2f8540;
-		border: 1px #232323 !important;
+		box-shadow: inset 1px 0 0 0 white, inset -1px 0 0 0 white;  
 		color: white !important;
 	}
 	header .wp-block-navigation__container > .current-menu-ancestor {

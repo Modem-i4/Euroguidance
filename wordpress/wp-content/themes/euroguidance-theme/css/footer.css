@@ -31,7 +31,7 @@
 .wp-block-navigation
 	> .wp-block-navigation__container
 	> li.wp-block-navigation-item.has-child
-	> button {
+	> a {
 	padding: 0.5em 1em;
 	font-weight: 700 !important;
 }
@@ -104,7 +104,7 @@ footer.wp-block-template-part nav.wp-block-navigation li {
 	/* ховаємо кнопку-іконку */
 	footer.wp-block-template-part
 		nav.wp-block-navigation
-		button.wp-block-navigation__submenu-icon.wp-block-navigation-submenu__toggle {
+		.wp-block-navigation__submenu-icon.wp-block-navigation-submenu__toggle {
 		display: none !important;
 	}
 
@@ -231,13 +231,13 @@ footer.wp-block-template-part nav.wp-block-navigation li {
 		transform: rotate(45deg);
 	}
 	footer
-		button.wp-block-navigation-submenu__toggle
+		.wp-block-navigation-submenu__toggle
 		~ ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu {
 		height: 0;
 		transition: 0.2s ease-in-out;
 	}
 	footer
-		button.wp-block-navigation-submenu__toggle.is-fast
+		.wp-block-navigation-submenu__toggle.is-fast
 		~ ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu {
 		height: 300px;
 	}
@@ -264,7 +264,7 @@ footer.wp-block-template-part nav.wp-block-navigation li {
 	/* показати кнопку-іконку підменю */
 	footer.wp-block-template-part
 		nav.wp-block-navigation
-		button.wp-block-navigation__submenu-icon.wp-block-navigation-submenu__toggle {
+		.wp-block-navigation__submenu-icon.wp-block-navigation-submenu__toggle {
 		display: inline-flex !important;
 	}
 
@@ -281,7 +281,7 @@ footer.wp-block-template-part nav.wp-block-navigation li {
 	/* коли aria-expanded="true" — показуємо */
 	footer.wp-block-template-part
 		nav.wp-block-navigation
-		button.wp-block-navigation-submenu__toggle[aria-expanded="true"]
+		.wp-block-navigation-submenu__toggle[aria-expanded="true"]
 		~ ul.wp-block-navigation__submenu-container.wp-block-navigation-submenu {
 		display: block !important;
 	}
@@ -351,10 +351,6 @@ footer
 	content: none !important;
 }
 
-footer .wp-block-navigation__container li button:hover {
-	background-color: #2f8540;
-	color: white !important;
-}
 footer .wp-block-navigation__container li a:hover {
 	background-color: #2f8540;
 	color: white !important;

@@ -8,8 +8,10 @@
   "attributes": {
     "title": { "type": "string", "default": "" },
     "file":  { "type": "string", "default": "" },
+    "fileId": { "type": "number", "default": 0 },
     "imageUrl": { "type": "string", "default": "" },
-    "activeAttachment": { "type": "string", "default": "file" } 
+    "activeAttachment": { "type": "string", "default": "file" },
+    "uid": { "type": "string", "default": "" } 
   },
   "supports": { "html": false },
   "editorScript": "file:./index.js",

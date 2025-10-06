@@ -11,7 +11,7 @@ document.addEventListener('click', function (e) {
     }
 });
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("footer li.open-on-click").forEach(li => {
+  document.querySelectorAll("footer li.open-on-click.open-first").forEach(li => {
     li.addEventListener("click", e => {
       if (window.innerWidth < 961) return;
       if (e.target.closest("a")) return;

@@ -84,45 +84,6 @@ add_filter('render_block', function ($block_content, $block) {
 
 
 
-// 6) Добираємо PDF-вкладення при порожньому пошуку (показати ВСІ PDF на 1-й сторінці)
-add_filter('the_posts', function($posts, $q){
-    if (!$q->is_main_query() || !$q->is_search() || is_admin()) return $posts;
-
-    $s_raw  = (string) $q->get('s');
-    $is_empty_search = ( $q->get('s') !== null && trim($s_raw) === '' );
-    if (!$is_empty_search) return $posts;
-
-    // Лише перша сторінка — не ламаємо пагінацію
-    $paged = max(1, (int)$q->get('paged'));
-    if ($paged > 1) return $posts;
-
-    $need = max(0, (int)$q->get('posts_per_page') - count($posts));
-    if ($need === 0) return $posts;
-
-    $pdf_q = new WP_Query([
-        'post_type'      => 'attachment',
-        'post_status'    => 'inherit',
-        'post_mime_type' => 'application/pdf',
-        'posts_per_page' => $need,     // добираємо рівно до ліміту
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-        'fields'         => 'ids',
-        'no_found_rows'  => true,
-    ]);
-
-    if (!empty($pdf_q->posts)) {
-        $have_ids = wp_list_pluck($posts, 'ID');
-        $add_ids  = array_values(array_diff($pdf_q->posts, $have_ids));
-        foreach ($add_ids as $id) {
-            if ($p = get_post($id)) $posts[] = $p;
-        }
-        // found_posts не міняємо — ми лише заповнюємо поточну сторінку.
-    }
-
-    return $posts;
-}, 10, 2);
-
-
 
 add_filter('body_class', function($classes){
     if ( is_search() ) {
@@ -138,3 +99,23 @@ add_filter('body_class', function($classes){
 
 // 7) Флаш рерайтів при активації теми
 add_action('after_switch_theme', function(){ flush_rewrite_rules(); });
+
+
+// 1) Прибрати required у Gutenberg Search (core/search)
+add_filter('render_block', function ($content, $block) {
+    if (!is_array($block) || empty($block['blockName'])) return $content;
+    if ($block['blockName'] !== 'core/search') return $content;
+
+    // знімаємо required / required="required"
+    $content = preg_replace('/\srequired(="required")?/i', '', $content);
+    return $content;
+}, 10, 2);
+
+// 2) Дозволити порожній пошук: якщо ?s= порожній — ставимо пробіл
+add_filter('request', function ($vars) {
+    if (isset($vars['s']) && $vars['s'] === '') {
+        $vars['s'] = ' '; // робить is_search=true і не редиректить на головну
+    }
+    return $vars;
+});
+

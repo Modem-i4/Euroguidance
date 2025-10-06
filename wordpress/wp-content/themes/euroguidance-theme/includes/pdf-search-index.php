@@ -1,73 +1,4 @@
 <?php
-// 1) Пости/сторінки — як було
-add_filter('pre_get_posts', function ($q) {
-    if (!$q->is_main_query() || !$q->is_search() || is_admin()) return;
-
-    $q->set('post_type', ['post', 'page']);
-    $q->set('post_status', ['publish']);
-    $q->set('sentence', true); // 1-символьні запити
-});
-
-// 2) Добір PDF: при звичайному запиті — по s; при "пробіл" — всі PDF
-add_filter('the_posts', function ($posts, $q) {
-    if (!$q->is_main_query() || !$q->is_search() || is_admin()) return $posts;
-
-    $s_raw = (string) $q->get('s');
-    $s_trim = trim($s_raw);
-    $space_only = ($s_trim === '' && $s_raw !== '');
-
-    // Лише на першій сторінці, щоб не ламати пагінацію
-    $paged = max(1, (int) $q->get('paged'));
-    if ($paged > 1) return $posts;
-
-    // Скільки місця лишилося у цій сторінці
-    $need = max(0, (int) $q->get('posts_per_page') - count($posts));
-    if ($need === 0) return $posts;
-
-    // Базові аргументи для PDF
-    $args = [
-        'post_type'      => 'attachment',
-        'post_status'    => 'inherit',
-        'post_mime_type' => 'application/pdf',
-        'posts_per_page' => $need,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-        'fields'         => 'ids',
-        'no_found_rows'  => true,
-    ];
-
-    // Якщо це НЕ "пробіл", шукаємо PDF по запиту; якщо "пробіл" — беремо всі PDF (без s)
-    if (!$space_only) {
-        if ($s_trim === '') return $posts; // порожній по-справжньому — нічого не добираємо
-        $args['s'] = $s_trim;
-    }
-
-    $pdf_q = new WP_Query($args);
-
-    if (!empty($pdf_q->posts)) {
-        $have_ids = wp_list_pluck($posts, 'ID');
-        $add_ids  = array_values(array_diff($pdf_q->posts, $have_ids));
-
-        foreach ($add_ids as $id) {
-            if ($p = get_post($id)) $posts[] = $p;
-        }
-        // Лічильник found_posts не чіпаємо, бо ми додаємо тільки на 1-й сторінці рівно до ліміту.
-    }
-
-    return $posts;
-}, 10, 2);
-
-
-
-
-
-
-
-
-
-
-
-
 // Допоміжна: чи ми в контексті сторінки новин (/news/)
 function ntd_is_news_search_context(): bool {
     // Базовий шлях для /news/ (враховує можливі префікси, сабдиректрії сайту тощо)
@@ -100,6 +31,8 @@ add_filter('term_link', function ($termlink, $term, $taxonomy) {
     ], $base);
 }, 10, 3);
 
+
+
 /**
  * 1) Перенаправляємо кліки на посилання категорій у контексті /news/
  *    Замість архіву категорії -> на /news/?s=…&cat=…
@@ -118,34 +51,85 @@ add_filter('term_link', function ($termlink, $term, $taxonomy) {
     ], home_url('/news/'));
 }, 99, 3); // <-- пріоритет 99, щоб перебити інші фільтри
 
-
 /**
- * 2) У блоці core/search на сторінці /news/:
- *    - підкладаємо hidden поле cat (якщо є)
- *    - форсимо action="/news/"
- *    (post_type більше НЕ додаємо)
+ * Розширення core/search:
+ * - на /news/ додає hidden cat та action="/news/"
+ * - на звичайному пошуку додає hidden type та action="/search/"
+ * (post_type НЕ додаємо)
  */
+if (!function_exists('ntd_is_default_search_context')) {
+    function ntd_is_default_search_context(): bool {
+        // "Звичайний" пошук: /search/ або /?s=...
+        // і не контекст /news/
+        if (function_exists('ntd_is_news_search_context') && ntd_is_news_search_context()) {
+            return false;
+        }
+        // is_search() покриває /?s=.. ; /search/ може бути окремою сторінкою
+        $is_search_page = is_search()
+            || (is_page() && (get_query_var('pagename') === 'search' || get_the_ID() && get_post_field('post_name', get_the_ID()) === 'search'));
+
+        return (bool) $is_search_page;
+    }
+}
+
 add_filter('render_block', function ($content, $block) {
     if (($block['blockName'] ?? '') !== 'core/search') return $content;
-    if (!ntd_is_news_search_context())                 return $content;
 
-    $cat = (int) ( get_query_var('cat') ?: ($_GET['cat'] ?? 0) );
+    // ====== КОНТЕКСТ НОВИН (/news/) ======
+    if (function_exists('ntd_is_news_search_context') && ntd_is_news_search_context()) {
+        $cat = (int) ( get_query_var('cat') ?: ($_GET['cat'] ?? 0) );
 
-    if ($cat) {
-        $content = preg_replace('~</form>~', '<input type="hidden" name="cat" value="'.(int)$cat.'"></form>', $content, 1);
+        if ($cat && !preg_match('~name=("|\')cat\1~i', $content)) {
+            $content = preg_replace(
+                '~</form>~i',
+                '<input type="hidden" name="cat" value="'.(int)$cat.'"></form>',
+                $content,
+                1
+            );
+        }
+
+        // Примусово action="/news/"
+        $content = preg_replace_callback('~<form\b([^>]*)>~i', function ($m) {
+            $attrs  = $m[1];
+            $target = ' action="'.esc_url(home_url('/news/')).'"';
+            if (preg_match('~\saction=("|\')[^"\']*\1~i', $attrs)) {
+                $attrs = preg_replace('~\saction=("|\')[^"\']*\1~i', $target, $attrs);
+            } else {
+                $attrs .= $target;
+            }
+            return '<form' . $attrs . '>';
+        }, $content, 1);
+
+        return $content;
     }
 
-    // Примусово action="/news/"
-    $content = preg_replace_callback('~<form\b([^>]*)>~i', function ($m) {
-        $attrs  = $m[1];
-        $target = ' action="'.esc_url(home_url('/news/')).'"';
-        if (preg_match('~\saction=("|\')[^"\']*\1~i', $attrs)) {
-            $attrs = preg_replace('~\saction=("|\')[^"\']*\1~i', $target, $attrs);
-        } else {
-            $attrs .= $target;
+    // ====== ЗВИЧАЙНИЙ ПОШУК (/search/ або /?s=...) ======
+    if (function_exists('ntd_is_default_search_context') && ntd_is_default_search_context()) {
+        $type = sanitize_text_field( get_query_var('type') ?: ($_GET['type'] ?? '') );
+
+        if ($type !== '' && !preg_match('~name=("|\')type\1~i', $content)) {
+            $content = preg_replace(
+                '~</form>~i',
+                '<input type="hidden" name="type" value="'.esc_attr($type).'"></form>',
+                $content,
+                1
+            );
         }
-        return '<form' . $attrs . '>';
-    }, $content, 1);
+
+        // Примусово action="/search/"
+        $content = preg_replace_callback('~<form\b([^>]*)>~i', function ($m) {
+            $attrs  = $m[1];
+            $target = ' action="'.esc_url(home_url('/search/')).'"';
+            if (preg_match('~\saction=("|\')[^"\']*\1~i', $attrs)) {
+                $attrs = preg_replace('~\saction=("|\')[^"\']*\1~i', $target, $attrs);
+            } else {
+                $attrs .= $target;
+            }
+            return '<form' . $attrs . '>';
+        }, $content, 1);
+
+        return $content;
+    }
 
     return $content;
 }, 10, 2);

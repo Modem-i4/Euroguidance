@@ -1,0 +1,23 @@
+{
+  "apiVersion": 3,
+  "name": "ntd/posttype-filter",
+  "title": "Фільтр: Пости/Сторінки/Матеріали",
+  "category": "widgets",
+  "icon": "filter",
+  "description": "Вкладки, що перемикають ?type=… і виглядають як «Перелік категорій».",
+  "textdomain": "ntd",
+  "supports": { "html": false, "multiple": true },
+  "attributes": {
+    "paramName": { "type": "string", "default": "type" },
+    "items": {
+      "type": "array",
+      "default": [
+        { "key": "posts",     "label": "Новини" },
+        { "key": "pages",     "label": "Сторінки" },
+        { "key": "resources", "label": "Матеріали" }
+      ]
+    }
+  },
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js"
+}

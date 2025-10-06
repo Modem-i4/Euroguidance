@@ -60,7 +60,7 @@
 }
 .search-results .type-post .badge::after{ content:'Новина'; }
 .search-results .type-page .badge::after{ content:'Сторінка'; }
-.search-results .type-attachment .badge::after{ content:'PDF'; }
+.search-results .type-resource .badge::after{ content:'Ресурс'; }
 
 /* Адаптив */
 @media (max-width:782px){
@@ -92,6 +92,9 @@
 
 p.wp-block-post-excerpt__excerpt {
   min-height: 5em;
+  max-height: 10em;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 70%, transparent calc(70% + 3em));
   text-align: justify;
 }
 
@@ -143,6 +146,7 @@ body.has-empty-search .search-title--empty { display:block !important; }
   position:absolute;
   inset-inline:0;
   bottom:0;
+  z-index: 10;
   transform: translateY(50%);
   background:#fff;
   box-shadow: var(--shadow);
@@ -169,7 +173,7 @@ body.has-empty-search .search-title--empty { display:block !important; }
 /* Категорії */
 .search-page-search .wp-block-categories{
   margin:0; padding:0; list-style:none;
-  display:flex; align-items:center; gap:28px; flex-wrap:wrap; 
+  display:flex; align-items:center; gap:20px;
 }
 .search-page-search .wp-block-categories a{
   text-decoration:none; font-weight:800; color:var(--muted);
@@ -204,7 +208,6 @@ body.has-empty-search .search-title--empty { display:block !important; }
 .search-page-search .wp-block-search__button{
   height:44px; padding:0 18px; font-weight:800;
    background:var(--green); color:#fff;
-  box-shadow:0 6px 14px rgba(47,133,64,.28);
 }
 
 /* Лейбл-скрінрідер */
@@ -215,13 +218,12 @@ body.has-empty-search .search-title--empty { display:block !important; }
 .show-all-btn {
   cursor: pointer;
 }
-
 .search-page-search .wp-block-categories .cat-item > a{
   padding: 0 5px;           /* бокові відступи */
+  width: 100%;
 }
 /* Активна категорія — як ліва вкладка "Всі" */
 .search-page-search .wp-block-categories .cat-item.is-active > a{
-  padding: 0 18px;           /* бокові відступи */
   margin: -14px 0;           /* "з’їдаємо" вертикальний паддінг .wp-block-columns */
   background: var(--green);
   color: #fff !important;
@@ -249,34 +251,37 @@ body.has-empty-search .search-title--empty { display:block !important; }
   display: inline-flex;
   align-items: center;
 }
+  .cat-item a {
+  justify-content: center;
+  text-align: center;
+  }
 /* На мобільному краще не ламати вертикальний ритм */
 @media (max-width:782px){
   .search-page-search .wp-block-categories {
     justify-content: space-between;
   }
-.search-page-search .wp-block-categories .cat-item > a{
-  padding: 0 5px;           /* бокові відступи */
-}
-.wp-block-categories-list {
-  gap:0;
-}
-.cat-item {
-      display: flex;
-    flex: 1;
-    justify-content: center;
-}
-.cat-item a {
-justify-content: center;
-text-align: center;
-}
-.search-input-wrapper > .wp-block-columns {
-  gap: 0;
-}
+  .search-page-search .wp-block-categories .cat-item > a{
+    padding: 0 5px;           /* бокові відступи */
+  }
 
-.search-page-search .search-input-wrapper {
-    transform: translateY(80%);
-}
-.btn-search-mobile {
-  margin-top: 10rem !important;
-}
+  .cat-item {
+    width: 33%;
+  }
+
+  .cat-item {
+        display: flex;
+      flex: 1;
+      justify-content: center;
+  }
+  .wp-block-categories-list,
+  .search-input-wrapper > .wp-block-columns,  .search-page-search .wp-block-categories{
+    gap: 0;
+  }
+
+  .search-page-search .search-input-wrapper {
+      transform: translateY(80%);
+  }
+  .btn-search-mobile {
+    margin-top: 10rem !important;
+  }
 }

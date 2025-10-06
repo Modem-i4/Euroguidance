@@ -1,5 +1,5 @@
 import './style.scss';
-( function ( wp ) {
+(function (wp) {
   const { registerBlockType } = wp.blocks;
   const { useBlockProps, RichText, InspectorControls } = wp.blockEditor;
   const { PanelBody, TextControl, ToggleControl, Notice, Spinner } = wp.components;
@@ -8,7 +8,6 @@ import './style.scss';
   const { useEffect, useMemo, useState } = wp.element;
   const { __ } = wp.i18n;
 
-  // Безпечне екранування (щоб не падати в редакторі)
   const esc = (s) => (s ?? '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -16,9 +15,32 @@ import './style.scss';
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 
+  // Декодуємо ентіті → сирий текст (для збереження в meta)
+  const decodeEntities = (s) => {
+    if (typeof s !== 'string') return '';
+    let out = s;
+    out = out.replace(/&nbsp;/gi, ' ');
+    out = out.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)));
+    out = out.replace(/&#(\d+);/g, (_, d) => String.fromCharCode(parseInt(d, 10)));
+    out = out
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'")
+      .replace(/&apos;/g, "'")
+      .replace(/&amp;/g, '&');
+    return out;
+  };
+
   const itemsToHtml = (items) => {
     if (!Array.isArray(items)) return '';
-    return items.map((t) => `<li>${esc(String(t))}</li>`).join('');
+    return items
+      .map((t) => {
+        const raw = String(t ?? '');
+        const safe = esc(raw).replace(/\r?\n/g, '<br>');
+        return `<li>${safe}</li>`;
+      })
+      .join('');
   };
 
   const htmlToArray = (html) => {
@@ -27,67 +49,63 @@ import './style.scss';
     const out = [];
     let m;
     while ((m = re.exec(html))) {
-      const txt = m[1]
+      const inner = m[1]
         .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/<\/?[^>]+>/g, '')
-        .trim();
+        .replace(/<\/?[^>]+>/g, '');
+      const txt = decodeEntities(inner).trim();
       if (txt) out.push(txt);
     }
     return out;
   };
 
   registerBlockType('parts-blocks/bullet-meta-list', {
-    edit: ( { attributes, setAttributes, context } ) => {
+    edit: ({ attributes, setAttributes, context }) => {
       const { metaKey = 'qual', showOnFront = true } = attributes;
 
-      const contextPostId   = context?.postId;
+      const contextPostId = context?.postId;
       const contextPostType = context?.postType;
 
-      const fallbackPostId = useSelect( (s) => s('core/editor')?.getCurrentPostId?.(), [] );
-      const fallbackType   = useSelect( (s) => s('core/editor')?.getCurrentPostType?.(), [] );
+      const fallbackPostId = useSelect((s) => s('core/editor')?.getCurrentPostId?.(), []);
+      const fallbackType = useSelect((s) => s('core/editor')?.getCurrentPostType?.(), []);
 
-      const postId   = contextPostId   ?? fallbackPostId;
+      const postId = contextPostId ?? fallbackPostId;
       const postType = contextPostType ?? fallbackType;
 
-      // Отримуємо meta; якщо запис ще не завантажився — покажемо Spinner
-      const record = useSelect( (s) => {
+      const record = useSelect((s) => {
         if (!postId || !postType) return null;
         return s('core').getEditedEntityRecord('postType', postType, postId);
-      }, [ postId, postType ] );
+      }, [postId, postType]);
 
-      const [ meta, setMeta ] = useEntityProp( 'postType', postType || 'post', 'meta', postId );
-
+      const [meta, setMeta] = useEntityProp('postType', postType || 'post', 'meta', postId);
       const metaVal = (metaKey && meta) ? meta[metaKey] : undefined;
 
-      const items = useMemo( () => {
-        if (Array.isArray(metaVal)) return metaVal;
-        if (typeof metaVal === 'string') return htmlToArray(metaVal);
+      const items = useMemo(() => {
+        if (Array.isArray(metaVal)) {
+          return metaVal.map((v) => decodeEntities(typeof v === 'string' ? v : String(v ?? '')));
+        }
+        if (typeof metaVal === 'string') {
+          return htmlToArray(metaVal);
+        }
         return [];
-      }, [ metaVal, metaKey, postId ] );
+      }, [metaVal, metaKey, postId]);
 
       const htmlFromMeta = useMemo(() => itemsToHtml(items), [items]);
-
-      const [ html, setHtml ] = useState( htmlFromMeta );
+      const [html, setHtml] = useState(htmlFromMeta);
 
       useEffect(() => {
         setHtml(htmlFromMeta);
-      }, [ htmlFromMeta, postId, metaKey ]);
+      }, [htmlFromMeta, postId, metaKey]);
 
       const onChangeHtml = (val) => {
-        // RichText іноді дає undefined — нормалізуємо до рядка
         const safeVal = typeof val === 'string' ? val : '';
         setHtml(safeVal);
-        const arr = htmlToArray(safeVal);
+        const arr = htmlToArray(safeVal); // уже декодовані сирі рядки
         if (meta && metaKey) {
           setMeta({ ...meta, [metaKey]: arr });
         }
       };
 
-      const blockProps = useBlockProps({
-        className: 'bullet-meta-list__editor',
-      });
-
-      // Щоб блок “не зникав” в редакторі — тримаємо хоч один <li>
+      const blockProps = useBlockProps({ className: 'bullet-meta-list__editor' });
       const ensuredHtml = (typeof html === 'string' && /<li\b/i.test(html)) ? html : '<li></li>';
 
       const missingKey = !metaKey || !metaKey.trim();
@@ -112,28 +130,28 @@ import './style.scss';
             </PanelBody>
           </InspectorControls>
 
-          <div { ...blockProps }>
-            { !hasResolved && <Spinner /> }
+          <div {...blockProps}>
+            {!hasResolved && <Spinner />}
 
-            { missingKey && (
+            {missingKey && (
               <Notice status="warning" isDismissible={false}>
                 {__('Вкажіть metaKey у панелі справа.', 'parts-blocks')}
               </Notice>
-            ) }
+            )}
 
-            { !missingKey && notRegistered && (
+            {!missingKey && notRegistered && (
               <Notice status="error" isDismissible={false}>
                 {__('Meta key не зареєстрований для цього типу запису.', 'parts-blocks')}
               </Notice>
-            ) }
+            )}
 
             <RichText
               tagName="ul"
               multiline="li"
-              value={ ensuredHtml }
-              onChange={ onChangeHtml }
-              placeholder={ __('Додайте елемент списку…', 'parts-blocks') }
-              allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] }
+              value={ensuredHtml}
+              onChange={onChangeHtml}
+              placeholder={__('Додайте елемент списку…', 'parts-blocks')}
+              allowedFormats={['core/bold', 'core/italic', 'core/link']}
             />
           </div>
         </>
@@ -142,5 +160,4 @@ import './style.scss';
 
     save: () => null,
   });
-
-} )( window.wp );
+})(window.wp);

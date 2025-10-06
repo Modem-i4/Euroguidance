@@ -71,9 +71,9 @@
 /* Заголовок */
 .card-title {
   margin: 0;
-  color: #1a1a1a;
+  color: #5E5C54;
   line-height: 1.15;
-  font-size: clamp(20px, 1.2vw + 14px, 28px);
+  font-size: clamp(20px, 1.2vw + 14px, 24px);
   font-weight: 800;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -109,5 +109,5 @@
 
 @media (max-width: 768px) {
   .card-content { padding: 18px; }
-  .card-title { font-size: clamp(18px, 2.5vw + 10px, 24px); }
+  .card-title { font-size: clamp(18px, 2.5vw + 10px, 22px); }
 }

@@ -9,6 +9,7 @@
 
   &__viewport {
     overflow-x: auto;
+    padding: 1em 0;
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
   }
@@ -148,6 +149,7 @@
       gap: .5rem;
       min-width: 160px;
       padding: 10px;
+      border-radius: 10px;
       transition: transform .25s ease, box-shadow .25s ease;
 
       &:hover {

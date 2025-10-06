@@ -163,7 +163,7 @@
       autoTimer = setInterval(() => {
         const idx = nearestIndex(Math.round(viewport.scrollLeft), pages);
         scrollToPage((idx + 1) % pages.length);
-      }, 2000);
+      }, 3500);
     }
     function stopAuto() {
       if (autoTimer) clearInterval(autoTimer);
