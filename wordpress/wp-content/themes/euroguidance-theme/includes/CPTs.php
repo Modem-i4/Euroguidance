@@ -92,6 +92,7 @@ add_action('init', function () {
 
     register_post_meta($type, 'phone', $meta_string);
     register_post_meta($type, 'email', $meta_string);
+    register_post_meta($type, 'show_label', $meta_string);
   }
 });
 
@@ -196,100 +197,140 @@ add_action('pre_get_posts', function($q){
 }, 11);
 
 
-/*** 4) СИНХРОНІЗАТОР: при збереженні будь-якого запису
- *   шукає блоки parts-blocks/materials-card у контенті
- *   і створює/оновлює відповідні ресурси з excerpt та file_id/external_url.
- ***/
+
+
+
+/*** 4) СИНХРОНІЗАТОР: створення/оновлення + видалення відсутніх ресурсів ***/
 add_action('save_post', function($post_id, $post){
-  // не тригеримося на autosave/ревізії/ресурси
   if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
   if ($post->post_type === 'revision' || $post->post_type === 'resource') return;
   if (!current_user_can('edit_post', $post_id)) return;
 
-  $content = $post->post_content;
-  if (!$content) return;
+  $content = $post->post_content ?? '';
+  $uids_present = [];   // UID-и карток, що реально є в контенті
 
-  // рекурсивний пошук блоків
-  $find_blocks = function($blocks, &$found) use (&$find_blocks){
-    foreach ($blocks as $b) {
-      if (!empty($b['blockName']) && $b['blockName']==='parts-blocks/materials-card') {
-        $found[] = $b;
+  // дістаємо всі блоки materials-card (рекурсивно)
+  if ($content) {
+    $find_blocks = function($blocks, &$found) use (&$find_blocks){
+      foreach ($blocks as $b) {
+        if (!empty($b['blockName']) && $b['blockName']==='parts-blocks/materials-card') {
+          $found[] = $b;
+        }
+        if (!empty($b['innerBlocks'])) $find_blocks($b['innerBlocks'], $found);
       }
-      if (!empty($b['innerBlocks'])) $find_blocks($b['innerBlocks'], $found);
+    };
+    $blocks = parse_blocks($content);
+    $materials = [];
+    $find_blocks($blocks, $materials);
+
+    // створення/оновлення
+    foreach ($materials as $b) {
+      $a      = isset($b['attrs']) ? $b['attrs'] : [];
+      $uid    = isset($a['uid']) ? sanitize_text_field($a['uid']) : '';
+      $title  = isset($a['title']) ? wp_strip_all_tags($a['title']) : '';
+      $file   = isset($a['file']) ? esc_url_raw(trim($a['file'])) : '';
+      $fileId = isset($a['fileId']) ? (int)$a['fileId'] : 0;
+
+      if (!$uid) continue;
+      $uids_present[] = $uid;
+
+      if (!$title && !$file && !$fileId) continue;
+
+      // знайти існуючий ресурс за (source_post + block_uid)
+      $existing = get_posts([
+        'post_type'        => 'resource',
+        'post_status'      => 'any',
+        'meta_query'       => [
+          ['key'=>'source_post','value'=>$post_id,'compare'=>'='],
+          ['key'=>'block_uid','value'=>$uid,'compare'=>'='],
+        ],
+        'numberposts'      => 1,
+        'fields'           => 'ids',
+        'no_found_rows'    => true,
+        'suppress_filters' => true,
+      ]);
+      $res_id = $existing ? $existing[0] : 0;
+
+      // якщо є лише URL і немає fileId — спробуємо отримати ID вкладення
+      if (!$fileId && $file) {
+        $maybe_id = attachment_url_to_postid($file);
+        if ($maybe_id) $fileId = $maybe_id;
+      }
+
+      $title_eff = $title ?: ($file ? wp_basename(parse_url($file, PHP_URL_PATH) ?: '') : 'Матеріал');
+      $excerpt = '';
+      if ($fileId) {
+        $excerpt = 'Матеріал PDF на тему «' . $title_eff . '»';
+      } elseif ($file) {
+        $excerpt = 'Зовнішній матеріал на тему «' . $title_eff . '»';
+      }
+
+      $postarr = [
+        'post_type'    => 'resource',
+        'post_status'  => 'publish',
+        'post_title'   => $title_eff,
+        'post_excerpt' => $excerpt,
+      ];
+
+      if ($res_id) {
+        $postarr['ID'] = $res_id;
+        wp_update_post($postarr);
+      } else {
+        $res_id = wp_insert_post($postarr);
+        if (is_wp_error($res_id) || !$res_id) continue;
+        update_post_meta($res_id,'source_post',$post_id);
+        update_post_meta($res_id,'block_uid',$uid);
+      }
+
+      // one-of: або file_id, або external_url
+      if ($fileId) {
+        update_post_meta($res_id,'file_id',$fileId);
+        delete_post_meta($res_id,'external_url');
+      } elseif ($file) {
+        if (!preg_match('#^https?://#i',$file)) $file = 'https://' . ltrim($file,'/');
+        update_post_meta($res_id,'external_url', esc_url_raw($file));
+        delete_post_meta($res_id,'file_id');
+      }
     }
-  };
+  }
 
-  $blocks = parse_blocks($content);
-  $materials = [];
-  $find_blocks($blocks, $materials);
-  if (!$materials) return;
+  // ВИДАЛЕННЯ ВІДСУТНІХ РЕСУРСІВ
+  $meta_query_base = [
+    ['key'=>'source_post','value'=>$post_id,'compare'=>'='],
+  ];
 
-  foreach ($materials as $b) {
-    $a     = isset($b['attrs']) ? $b['attrs'] : [];
-    $uid   = isset($a['uid']) ? sanitize_text_field($a['uid']) : '';
-    $title = isset($a['title']) ? wp_strip_all_tags($a['title']) : '';
-    $file  = isset($a['file']) ? esc_url_raw(trim($a['file'])) : '';
-    $fileId= isset($a['fileId']) ? (int)$a['fileId'] : 0;
-
-    if (!$uid) continue; // обов'язковий ідентифікатор
-    if (!$title && !$file && !$fileId) continue;
-
-    // шукаємо існуючий ресурс за (source_post + block_uid)
-    $existing = get_posts([
+  if (!empty($uids_present)) {
+    // видаляємо всі, чиї block_uid НЕ в списку (або відсутній)
+    $to_delete = get_posts([
       'post_type'        => 'resource',
       'post_status'      => 'any',
-      'meta_query'       => [
-        ['key'=>'source_post','value'=>$post_id,'compare'=>'='],
-        ['key'=>'block_uid','value'=>$uid,'compare'=>'='],
-      ],
-      'numberposts'      => 1,
       'fields'           => 'ids',
+      'numberposts'      => -1,
       'no_found_rows'    => true,
       'suppress_filters' => true,
+      'meta_query'       => array_merge($meta_query_base, [[
+        'relation' => 'OR',
+        ['key'=>'block_uid','value'=>$uids_present,'compare'=>'NOT IN'],
+        ['key'=>'block_uid','compare'=>'NOT EXISTS'],
+      ]]),
     ]);
-    $res_id = $existing ? $existing[0] : 0;
+  } else {
+    // карток немає — зносимо всі ресурси цього поста
+    $to_delete = get_posts([
+      'post_type'        => 'resource',
+      'post_status'      => 'any',
+      'fields'           => 'ids',
+      'numberposts'      => -1,
+      'no_found_rows'    => true,
+      'suppress_filters' => true,
+      'meta_query'       => $meta_query_base,
+    ]);
+  }
 
-    // якщо є лише URL і немає fileId — спробуємо знайти ID вкладення за локальним URL
-    if (!$fileId && $file) {
-      $maybe_id = attachment_url_to_postid($file);
-      if ($maybe_id) $fileId = $maybe_id;
-    }
-
-    // ефективна назва і excerpt
-    $title_eff = $title ?: ($file ? wp_basename(parse_url($file, PHP_URL_PATH) ?: '') : 'Матеріал');
-    $excerpt = '';
-    if ($fileId) {
-      $excerpt = 'Матеріал PDF на тему «' . $title_eff . '»';
-    } elseif ($file) {
-      $excerpt = 'Зовнішній матеріал на тему «' . $title_eff . '»';
-    }
-
-    // створення/оновлення ресурсу
-    $postarr = [
-      'post_type'    => 'resource',
-      'post_status'  => 'publish',
-      'post_title'   => $title_eff,
-      'post_excerpt' => $excerpt,
-    ];
-
-    if ($res_id) {
-      $postarr['ID'] = $res_id;
-      wp_update_post($postarr);
-    } else {
-      $res_id = wp_insert_post($postarr);
-      if (is_wp_error($res_id) || !$res_id) continue;
-      update_post_meta($res_id,'source_post',$post_id);
-      update_post_meta($res_id,'block_uid',$uid);
-    }
-
-    // one-of: або file_id, або external_url
-    if ($fileId) {
-      update_post_meta($res_id,'file_id',$fileId);
-      delete_post_meta($res_id,'external_url');
-    } elseif ($file) {
-      if (!preg_match('#^https?://#i',$file)) $file = 'https://' . ltrim($file,'/');
-      update_post_meta($res_id,'external_url', esc_url_raw($file));
-      delete_post_meta($res_id,'file_id');
+  if (!empty($to_delete)) {
+    foreach ($to_delete as $rid) {
+      // жорстке видалення з БД
+      wp_delete_post((int)$rid, true);
     }
   }
 }, 20, 2);

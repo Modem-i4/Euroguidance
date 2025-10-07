@@ -89,7 +89,7 @@ gtag('consent','default',{
   appearance:none; border:0; cursor:pointer; font-weight:600;
   padding:10px 22px; border-radius:0; font-size:14px;
   transition:transform .12s ease, filter .12s ease, box-shadow .12s ease, background-color .12s ease;
-  color:#fff; background:#82B58C;
+  color:#fff; background:#589D66;
   box-shadow: 0 3px 12px rgba(0,0,0,.18);
 }
 .edcmp-btn:hover{background-color:#2f8540;}
@@ -105,7 +105,7 @@ gtag('consent','default',{
   <div class="edcmp-banner" id="edcmpPanel" aria-hidden="true">
     <div class="edcmp-wrap">
       <div class="edcmp-icon" aria-hidden="true">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M16 21.3333V16M16 10.6666H16.0133M29.3333 16C29.3333 23.3638 23.3638 29.3333 16 29.3333C8.63619 29.3333 2.66666 23.3638 2.66666 16C2.66666 8.63616 8.63619 2.66663 16 2.66663C23.3638 2.66663 29.3333 8.63616 29.3333 16Z" stroke="url(#paint0_linear_730_339)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/> <defs> <linearGradient id="paint0_linear_730_339" x1="2.66666" y1="15.4017" x2="29.3333" y2="15.4017" gradientUnits="userSpaceOnUse"> <stop stop-color="#7ABF92"/> <stop offset="1" stop-color="#4A78A1"/> </linearGradient> </defs> </svg>
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M16 21.3333V16M16 10.6666H16.0133M29.3333 16C29.3333 23.3638 23.3638 29.3333 16 29.3333C8.63619 29.3333 2.66666 23.3638 2.66666 16C2.66666 8.63616 8.63619 2.66663 16 2.66663C23.3638 2.66663 29.3333 8.63616 29.3333 16Z" stroke="url(#paint0_linear_730_339)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/> <defs> <linearGradient id="paint0_linear_730_339" x1="2.66666" y1="15.4017" x2="29.3333" y2="15.4017" gradientUnits="userSpaceOnUse"> <stop stop-color="#589D66"/> <stop offset="1" stop-color="#326B8F"/> </linearGradient> </defs> </svg>
       </div>
       <div class="edcmp-text">'.
         esc_html__('Ми використовуємо cookies для аналітики відвідуваності сайту. Перегляньте ', 'everydev-cmp') .

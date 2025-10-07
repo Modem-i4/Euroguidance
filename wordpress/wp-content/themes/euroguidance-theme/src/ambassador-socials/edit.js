@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { useEntityProp } from '@wordpress/core-data';
-import { InspectorControls } from '@wordpress/block-editor';
+import { InspectorControls, BlockControls } from '@wordpress/block-editor';
 import {
 	Button,
 	Popover,
@@ -11,6 +11,8 @@ import {
 	PanelBody,
 	__experimentalHStack as HStack,
 	__experimentalSpacer as Spacer,
+	ToolbarGroup,
+	ToolbarButton,
 } from '@wordpress/components';
 import { plus } from '@wordpress/icons';
 
@@ -55,7 +57,7 @@ const ICONS = {
 export default function Edit( props ) {
 	const { attributes, setAttributes, context = {} } = props;
 
-	/* Отримуємо postId/postType навіть поза Query Loop */
+	// postId/postType
 	const fallback = useSelect( ( select ) => {
 		const ed = select( 'core/editor' );
 		return { postId: ed?.getCurrentPostId?.(), postType: ed?.getCurrentPostType?.() };
@@ -63,55 +65,68 @@ export default function Edit( props ) {
 	const postId   = context.postId   ?? fallback.postId;
 	const postType = context.postType ?? fallback.postType;
 
-	/* Мета */
+	// meta
 	const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta', postId );
 
-	/* Декодуємо масив посилань */
+	// links (без showLabel у meta)
 	const links = useMemo( () => {
 		const raw = meta?.[ META_KEY ];
-		if ( Array.isArray( raw ) ) return raw;
-		if ( typeof raw === 'string' && raw.trim() ) {
-			try { return JSON.parse( raw ); } catch( e ) {}
+		let arr = [];
+		if ( Array.isArray( raw ) ) arr = raw;
+		else if ( typeof raw === 'string' && raw.trim() ) {
+			try { arr = JSON.parse( raw ); } catch { arr = []; }
 		}
-		return [];
+		return arr
+			.map( (l) => ({ type: l?.type, url: l?.url || '' }) )
+			.filter( (l) => l.type );
 	}, [ meta ] );
 
-	const setLinks = (next) => setMeta( { ...meta, [ META_KEY ]: next } );
+	const setLinks = (next) => {
+		const clean = next.map( (l) => ({ type: l?.type, url: l?.url || '' }) );
+		setMeta( { ...meta, [ META_KEY ]: clean } );
+	};
 
-	/* Локальний стан редактора */
+	// local
 	const [ editingIndex, setEditingIndex ] = useState( null );
 	const [ pickerOpen, setPickerOpen ] = useState( false );
 	const anchorRef = useRef( null );
 
-	/* Додавання/редагування */
+	const available  = PLATFORMS.filter( p => !links.some( l => l.type === p.type ) );
+	const globalShow = !!attributes?.showLabels;
+
+	// CRUD
 	const addPlatform = ( type ) => {
 		if ( links.find( l => l.type === type ) ) return;
-		const next = [ ...links, { type, url: '', showLabel: true } ];
+		const next = [ ...links, { type, url: '' } ];
 		setLinks( next );
 		setPickerOpen( false );
 		setTimeout( () => setEditingIndex( next.length - 1 ), 0 );
 	};
-
 	const setUrlAt = ( i, url ) => {
-		const next = links.map( (l,idx)=> idx===i?{...l,url}:l );
+		const next = links.map( (l,idx)=> idx===i ? { type: l.type, url } : l );
 		setLinks( next );
 	};
-
-	const setShowLabelAt = ( i, value ) => {
-		const next = links.map( (l,idx)=> idx===i?{...l, showLabel: !!value}:l );
-		setLinks( next );
-	};
-
 	const removeAt = ( i ) => {
 		setLinks( links.filter( (_l,idx)=>idx!==i ) );
 		setEditingIndex( null );
 	};
 
-	const available = PLATFORMS.filter( p => !links.some( l => l.type === p.type ) );
-	const globalShow = !!attributes?.showLabels;
-
 	return (
 		<>
+			{/* ВЕРХНІЙ ТУЛБАР БЛОКА (components-toolbar-group) */}
+			<BlockControls>
+				<ToolbarGroup>
+					<ToolbarButton
+						onClick={() => setAttributes({ showLabels: !globalShow })}
+						isPressed={ globalShow }
+						label={ globalShow ? 'Сховати назви' : 'Показати назви' }
+					>
+						{ globalShow ? 'Сховати назви' : 'Показати назви' }
+					</ToolbarButton>
+				</ToolbarGroup>
+			</BlockControls>
+
+			{/* ПРАВА ПАНЕЛЬ — як і просив, “з поданням справа – добре” */}
 			<InspectorControls>
 				<PanelBody title="Параметри відображення" initialOpen={ true }>
 					<ToggleControl
@@ -127,17 +142,17 @@ export default function Edit( props ) {
 					{ links.map( (item, index) => {
 						const Ico   = ICONS[item.type] || IconWebsite;
 						const title = PLATFORMS.find(p=>p.type===item.type)?.label || item.type;
-						const showLabel = globalShow && (item.showLabel ?? true);
+
 						return (
 							<div key={ item.type } className="ntd-social-links__item">
 								<Tooltip text={ title }>
 									<Button
-										className={ showLabel ? "ntd-social-links__btn has-label" : "ntd-social-links__btn" }
+										className={ globalShow ? "ntd-social-links__btn has-label" : "ntd-social-links__btn" }
 										onClick={ ()=>setEditingIndex(index) }
 										aria-label={ title }
 									>
 										<Ico/>
-										{ showLabel && <span className="ntd-social-links__label">{ title }</span> }
+										{ globalShow && <span className="ntd-social-links__label">{ title }</span> }
 									</Button>
 								</Tooltip>
 
@@ -157,15 +172,6 @@ export default function Edit( props ) {
 													placeholder="https://..."
 													value={ item.url ?? '' }
 													onChange={ (v)=>setUrlAt(index,v) }
-												/>
-											</Spacer>
-
-											<Spacer margin="8px 0 0">
-												<ToggleControl
-													label="Показувати назву поруч із іконкою (для цього посилання)"
-													checked={ item.showLabel ?? true }
-													onChange={ (v)=> setShowLabelAt(index, v) }
-													help="Працює лише якщо глобально увімкнено показ назв у параметрах блоку."
 												/>
 											</Spacer>
 

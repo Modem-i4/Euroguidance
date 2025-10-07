@@ -71,18 +71,38 @@ registerBlockType(metadata.name, {
 			return rec?.content?.raw || null;
 		};
 
+		const getCanvasDocument = () => {
+			const settings = be.getSettings?.() || {};
+			return (
+				settings.__unstableContentDocument ||
+				settings.domDocument ||
+				blockProps?.ref?.current?.ownerDocument ||
+				document
+			);
+		};
+
 		const resolveTarget = () => {
-			if (!targetSelector) return { parentId: rootClientId, index: currentIndex + 1 };
-			const el = document.querySelector(targetSelector);
-			if (!el) return { parentId: rootClientId, index: currentIndex + 1 };
+			const doc = getCanvasDocument();
+
+			if (!targetSelector) {
+				return { parentId: rootClientId, index: currentIndex + 1 };
+			}
+
+			const el = doc.querySelector(targetSelector);
+			if (!el) {
+				return { parentId: rootClientId, index: currentIndex + 1 };
+			}
 
 			const host = el.closest('.block-editor-block-list__block');
 			const targetId = host?.dataset?.block;
-			if (!targetId) return { parentId: rootClientId, index: currentIndex + 1 };
+			if (!targetId) {
+				return { parentId: rootClientId, index: currentIndex + 1 };
+			}
 
 			const order = be.getBlockOrder(targetId) || [];
-			return { parentId: targetId, index: order.length }; // всередину, в кінець
+			return { parentId: targetId, index: order.length };
 		};
+
 
 		const handleAdd = () => {
 			let blocksToInsert = [];

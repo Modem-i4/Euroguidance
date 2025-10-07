@@ -34,9 +34,20 @@
 		width: 43.5px !important;
 		min-width: 43.5px !important;
 	}
+	.about-page__features-row {
+		gap: 0 !important;
+	}
+
+  .about-page__features-row { display:flex; align-items:center; gap:8px; }
+  .about-page__features-row > .test { flex:1 1 0; min-width:0; padding:0; }
+  .about-page__features-row .about-page__feature-line-desk { display:none; }
+  .about-page__features-row .about-page__feature-line-mob { display:block; }
+  .about-page__features-row .test figure { margin:0; }
+  .about-page__features-row .test .about-page__feature-line-mob img {
+    width:100% !important; height:auto !important; display:block; object-fit:contain;
+  }
 }
-.about-page__feature-line-desk {
-}
+
 .about-page__feature-line-mob {
 	display: none;
 	max-width: 40px;

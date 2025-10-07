@@ -30,6 +30,7 @@ function mytheme_assets_cfg(): array {
             'mytheme-about'      => 'css/about-page.css',
             'mytheme-intermob'   => 'css/inter-mobility-page.css',
             'mytheme-ambassadors'=> 'css/ambasadors.css',
+            'mytheme-services'=> 'css/services.css',
         ],
     ];
 }

@@ -9,10 +9,10 @@
 
   background:
     linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0) 100%) top / 100% 400px no-repeat,
-    linear-gradient(84deg, #7abf92 0%, #4a78a1 100%);
+    linear-gradient(84deg, #589D66 0%, #326B8F 100%);
 }
 
-	/* background: linear-gradient(84deg, #7abf92 0%, #4a78a1 100%);
+	/* background: linear-gradient(84deg, #589D66 0%, #326B8F 100%);
 	clip-path: polygon(
 		0 8%,
 		100% 0,
