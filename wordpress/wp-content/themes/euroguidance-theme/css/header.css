@@ -9,7 +9,8 @@ header {
 header .header__logo {
 	padding: 20px 0;
 }
-header .wp-block-navigation__container > .wp-block-navigation-submenu {
+
+header .wp-block-navigation__container>.wp-block-navigation-submenu {
 	padding: 0;
 }
 
@@ -19,10 +20,12 @@ header .wp-block-navigation__responsive-container-close svg {
 	width: 50px;
 	color: #575756;
 }
+
 header .wp-block-navigation__responsive-container-close svg {
 	width: 24px;
 	height: 24px;
 }
+
 .pb-lang-switch {
 	margin-top: 5px;
 }
@@ -32,37 +35,47 @@ header .current-menu-item {
 	color: white !important;
 	background-color: #2f8540 !important;
 }
-header .current-menu-ancestor > a > .wp-block-navigation-item__label {
+
+header .current-menu-ancestor>a>.wp-block-navigation-item__label {
 	font-weight: 700;
 	/* color: #232323 !important; */
 }
+
 header .wp-block-navigation .wp-block-navigation__submenu-icon {
 	margin-left: 0.5em;
 	background-color: transparent !important;
 }
+
 header .wp-block-navigation__responsive-dialog {
 	color: #5e5c54 !important;
 }
+
 @media (min-width: 961px) {
-	header .wp-block-navigation__container > .wp-block-navigation-item > a {
+	header .wp-block-navigation__container>.wp-block-navigation-item>a {
 		position: relative;
-		/* padding: 41px 0; */
-		padding: 41px 21px 41px 12px;
+		padding: 35px 21px 35px 12px;
+		/* height: 100%; */
 	}
-	header .wp-block-navigation__container > .wp-block-navigation-item a {
-		white-space: nowrap
+
+	header .wp-block-navigation__container>.wp-block-navigation-item a {
+		/* white-space: nowrap */
+	}
+
+	header .wp-block-navigation__submenu-container li {
+		margin-bottom: 2px !important;
 	}
 
 	header .wp-block-navigation li.wp-block-navigation-item.has-child {
-		padding: 41px 21px 41px 12px;
+		padding: 35px 21px 35px 12px;
+		/* height: 100%; */
+
 	}
-	header .wp-block-navigation li.wp-block-navigation-item.has-child > a {
+
+	header .wp-block-navigation li.wp-block-navigation-item.has-child>a {
 		padding: 0;
 	}
-	header
-		.wp-block-navigation__container
-		> .wp-block-navigation-item
-		> a::after {
+
+	header .wp-block-navigation__container>.wp-block-navigation-item>a::after {
 		content: "";
 		position: absolute;
 		top: 50%;
@@ -82,61 +95,73 @@ header .wp-block-navigation__responsive-dialog {
 		background-color: transparent;
 		transition: 0.3s ease;
 	}
+
+	header .header__nav>.wp-block-navigation-submenu:hover {
+		box-shadow:
+			inset 1px 0 0 0 rgb(255, 255, 255),
+			/* зліва */
+			inset -1px 0 0 0 rgb(255, 255, 255);
+		/* справа */
+	}
+
+
 	header .wp-block-navigation .wp-block-navigation-item:hover {
 		background-color: #2f8540;
-		box-shadow: inset 1px 0 0 0 white, inset -1px 0 0 0 white;  
 		color: white !important;
+		box-shadow:
+			inset 2px 0 0 0 rgb(255, 255, 255),
+			/* зліва */
+			inset -2px 0 0 0 rgb(255, 255, 255);
+		/* справа */
+
+
 	}
-	header .wp-block-navigation__container > .current-menu-ancestor {
-		background-color: #2f8540;
-		color: white !important;
-	}
-	header .wp-block-navigation__container > .current-menu-item {
+
+	header .wp-block-navigation__container>.current-menu-ancestor {
 		background-color: #2f8540;
 		color: white !important;
 	}
 
-	header
-		.wp-block-navigation__container
-		> .wp-block-navigation-item:hover
-		> a::after,
-	header .wp-block-navigation__container > .current-menu-item > a::after,
-	header .wp-block-navigation__container > .current-menu-ancestor > a::after {
+	header .wp-block-navigation__container>.current-menu-item {
+		background-color: #2f8540;
+		color: white !important;
+	}
+
+	header .wp-block-navigation__container>.wp-block-navigation-item:hover>a::after,
+	header .wp-block-navigation__container>.current-menu-item>a::after,
+	header .wp-block-navigation__container>.current-menu-ancestor>a::after {
 		transform: scaleX(1);
 	}
 }
 
 /* гарантія, що у підпунктів немає нижнього підкреслення */
-header
-	.wp-block-navigation__submenu-container
-	.wp-block-navigation-item
-	> a::after {
+header .wp-block-navigation__submenu-container .wp-block-navigation-item>a::after {
 	content: none !important;
 }
 
 /* сабменю: вертикальна смужка */
-header .wp-block-navigation__submenu-container .wp-block-navigation-item > a {
+header .wp-block-navigation__submenu-container .wp-block-navigation-item>a {
 	position: relative;
 }
-header .wp-block-navigation__submenu-container .wp-block-navigation-item > a {
+
+header .wp-block-navigation__submenu-container .wp-block-navigation-item>a>span {
 	padding: 1px 56px 4px 32px;
+	margin-bottom: 2px;
 }
 
-header
-	.wp-block-navigation__submenu-container
-	.wp-block-navigation-item:hover
-	> a::before,
-header .wp-block-navigation__submenu-container .current-menu-item > a::before,
-header
-	.wp-block-navigation__submenu-container
-	.current-menu-ancestor
-	> a::before {
+header .wp-block-navigation__submenu-container .wp-block-navigation-item>a {
+	padding: 0px;
+}
+
+header .wp-block-navigation__submenu-container .wp-block-navigation-item:hover>a::before,
+header .wp-block-navigation__submenu-container .current-menu-item>a::before,
+header .wp-block-navigation__submenu-container .current-menu-ancestor>a::before {
 	transform: scaleY(1);
 }
 
-header .wp-block-navigation__submenu-container > li {
-	padding-top: 2px;
-	padding-bottom: 2px;
+header .wp-block-navigation__submenu-container>li {
+	/* padding-top: 2px;
+	padding-bottom: 2px; */
 }
 
 .open-on-hover-click {
@@ -152,10 +177,12 @@ header .wp-block-navigation__submenu-container > li {
 		backdrop-filter: blur(20px);
 		/* border-right: 0px !important; */
 	}
+
 	/* header .wp-block-navigation .wp-block-navigation-item {
 		background-color: transparent;
 	} */
 }
+
 header .wp-block-navigation .has-child .wp-block-navigation__submenu-container {
 	left: 0px;
 }
@@ -164,6 +191,7 @@ header .wp-block-navigation .has-child .wp-block-navigation__submenu-container {
 header a.wp-block-navigation-item__content[href="/search"] {
 	font-size: 0;
 }
+
 header a.wp-block-navigation-item__content[href="/search"] img {
 	font-size: initial;
 }
@@ -181,56 +209,40 @@ header .wp-block-navigation__container {
 }
 
 @media (max-width: 960px) {
+
 	/* current page */
-	header
-		.wp-block-navigation__responsive-container.is-menu-open
-		.wp-block-navigation__responsive-dialog
-		.wp-block-navigation__container
-		> li.current-menu-item
-		> a.wp-block-navigation-item__content {
+	header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-dialog .wp-block-navigation__container>li.current-menu-item>a.wp-block-navigation-item__content {
 		background-color: #2f8540 !important;
 		color: #fff !important;
 	}
-	header
-		.wp-block-navigation
-		.wp-block-navigation__submenu-container
-		.wp-block-navigation-item__content {
+
+	header .wp-block-navigation .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
 		white-space: normal;
 	}
-	header
-		.wp-block-navigation__responsive-dialog
-		.wp-block-navigation__container
-		> li.wp-block-navigation-item:first-child {
+
+	header .wp-block-navigation__responsive-dialog .wp-block-navigation__container>li.wp-block-navigation-item:first-child {
 		margin-bottom: 40px;
 	}
-	header
-		.wp-block-navigation__responsive-dialog
-		.wp-block-navigation__container
-		> li.wp-block-navigation-item:first-child
-		> a:hover {
+
+	header .wp-block-navigation__responsive-dialog .wp-block-navigation__container>li.wp-block-navigation-item:first-child>a:hover {
 		background: none;
 		color: white;
 	}
 
-	header
-		.wp-block-navigation__responsive-dialog
-		.wp-block-navigation__container
-		> li.wp-block-navigation-item {
+	header .wp-block-navigation__responsive-dialog .wp-block-navigation__container>li.wp-block-navigation-item {
 		margin-bottom: 24px;
 	}
+
 	/* Увесь блок навігації: і десктоп, і офканвас */
 	header .wp-block-navigation a.wp-block-navigation-item__content {
 		padding-left: 24px !important;
 	}
 
-	header
-		.wp-block-navigation
-		.wp-block-navigation__submenu-container
-		> li.current-menu-item
-		> a.wp-block-navigation-item__content {
+	header .wp-block-navigation .wp-block-navigation__submenu-container>li.current-menu-item>a.wp-block-navigation-item__content {
 		background: #2f8540;
 		color: white;
 	}
+
 	header .wp-block-navigation a.wp-block-navigation-item__content:hover {
 		background: #2f8540;
 		color: white;
@@ -239,19 +251,24 @@ header .wp-block-navigation__container {
 	header .wp-block-navigation__responsive-container {
 		overflow: visible !important;
 	}
+
 	header .header_logo-mobile {
 		display: block;
 	}
+
 	header {
 		--wp--style--block-gap: 6px;
 		font-size: xx-large;
 	}
+
 	header a.wp-block-navigation-item__content[href="/search"] {
 		font-size: initial;
 	}
-	header a > .wp-block-navigation-item__label {
+
+	header a>.wp-block-navigation-item__label {
 		font-weight: 700;
 	}
+
 	header .wp-block-navigation__responsive-container {
 		position: fixed;
 		inset: 0;
@@ -274,9 +291,7 @@ header .wp-block-navigation__container {
 		padding: 16px 24px 16px 0px !important;
 	}
 
-	header
-		.wp-block-navigation__responsive-container
-		.wp-block-navigation__responsive-dialog {
+	header .wp-block-navigation__responsive-container .wp-block-navigation__responsive-dialog {
 		position: fixed;
 		top: 0;
 		right: 0;
@@ -288,9 +303,8 @@ header .wp-block-navigation__container {
 		transition: transform 0.13s ease;
 		padding: 32px;
 	}
-	header
-		.wp-block-navigation__responsive-container
-		.wp-block-navigation__responsive-dialog::before {
+
+	header .wp-block-navigation__responsive-container .wp-block-navigation__responsive-dialog::before {
 		position: absolute;
 		content: "";
 		bottom: 0;
@@ -305,10 +319,13 @@ header .wp-block-navigation__container {
 	header .wp-block-navigation__responsive-container-close {
 		top: 16px;
 		right: 32px;
-		border: 1px solid transparent; /* тримаємо місце під рамку */
+		border: 1px solid transparent;
+		/* тримаємо місце під рамку */
 		border-radius: 5px;
-		transition: border-color 0.2s ease; /* плавна поява */
+		transition: border-color 0.2s ease;
+		/* плавна поява */
 	}
+
 	header .wp-block-navigation__responsive-container-close:hover,
 	header .wp-block-navigation__responsive-container-close:focus-visible {
 		border-color: #575756;
@@ -319,9 +336,7 @@ header .wp-block-navigation__container {
 		height: 100vh;
 	}
 
-	header
-		.wp-block-navigation__responsive-container.is-menu-open
-		.wp-block-navigation__responsive-dialog {
+	header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-dialog {
 		transform: translateX(0);
 	}
 
@@ -329,9 +344,8 @@ header .wp-block-navigation__container {
 		font-size: x-large;
 		font-weight: 700;
 	}
-	header
-		.wp-block-navigation__submenu-container
-		.wp-block-navigation-item__label {
+
+	header .wp-block-navigation__submenu-container .wp-block-navigation-item__label {
 		font-size: large;
 		font-weight: 500;
 	}
@@ -344,8 +358,10 @@ header .wp-block-navigation__container {
 	header .flag-en::before {
 		content: "";
 		display: inline-block;
-		width: 1.2em; /* ширина прапора */
-		height: 0.9em; /* висота прапора */
+		width: 1.2em;
+		/* ширина прапора */
+		height: 0.9em;
+		/* висота прапора */
 		margin-right: 0.4em;
 		background-size: cover;
 		background-position: center;
@@ -365,6 +381,7 @@ header .wp-block-navigation__container {
 
 /* ПЕРЕХІД ДО МОБІЛЬНОГО МЕНЮ */
 @media (max-width: 960px) {
+
 	.wp-block-navigation__responsive-container-open,
 	.wp-block-navigation__responsive-container-close {
 		display: block !important;
@@ -378,14 +395,14 @@ header .wp-block-navigation__container {
 		display: block !important;
 	}
 
-	.wp-block-navigation:not(.has-text-color)
-		.wp-block-navigation__responsive-container.is-menu-open {
+	.wp-block-navigation:not(.has-text-color) .wp-block-navigation__responsive-container.is-menu-open {
 		color: #232323;
 	}
 }
 
 /* показуємо звичайне меню */
 @media (min-width: 961px) {
+
 	.wp-block-navigation__responsive-container-open,
 	.wp-block-navigation__responsive-container-close {
 		display: none !important;
@@ -395,6 +412,3 @@ header .wp-block-navigation__container {
 		display: block !important;
 	}
 }
-
-
-
