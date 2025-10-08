@@ -15,21 +15,38 @@
   var pathname = location.pathname.replace(/\/+$/,'');
   var isSearchPage = pathname === '/search' || params.has('s');
 
-  allTab.classList.remove('is-active');
-  showAllBtns.forEach(function(b){ b.classList.remove('is-active'); });
-  list.querySelectorAll('.cat-item.is-active').forEach(function(li){ li.classList.remove('is-active'); });
-  list.querySelectorAll('.cat-item a[aria-current]').forEach(function(a){ a.removeAttribute('aria-current'); });
+  if (!isSearchPage) {
+    allTab.classList.remove('is-active');
+    showAllBtns.forEach(function(b){ b.classList.remove('is-active'); });
+    list.querySelectorAll('.cat-item.is-active').forEach(function(li){ li.classList.remove('is-active'); });
+    list.querySelectorAll('.cat-item a[aria-current]').forEach(function(a){ a.removeAttribute('aria-current'); });
+  } else {
+    allTab.classList.remove('is-active');
+    showAllBtns.forEach(function(b){ b.classList.remove('is-active'); });
+  }
 
   var hasCat = cat && /^\d+$/.test(cat) && list.querySelector('.cat-item-' + cat);
   var hasType = isSearchPage && type && type !== 'all';
+  var anyActive = !!list.querySelector('.cat-item.is-active, .cat-item a[aria-current]');
 
   if (hasCat) {
     var li = list.querySelector('.cat-item-' + cat);
-    li.classList.add('is-active');
-    var a = li.querySelector('a'); if (a) a.setAttribute('aria-current', 'true');
-  } else if (!hasType) {
-    allTab.classList.add('is-active');
-    showAllBtns.forEach(function(b){ b.classList.add('is-active'); });
+    if (li) {
+      li.classList.add('is-active');
+      var a = li.querySelector('a'); if (a) a.setAttribute('aria-current', 'true');
+    }
+  } else {
+    if (isSearchPage) {
+      if (!hasType && !anyActive) {
+        allTab.classList.add('is-active');
+        showAllBtns.forEach(function(b){ b.classList.add('is-active'); });
+      }
+    } else {
+      if (!hasType) {
+        allTab.classList.add('is-active');
+        showAllBtns.forEach(function(b){ b.classList.add('is-active'); });
+      }
+    }
   }
 
   showAllBtns.forEach(function(btn){
@@ -40,6 +57,7 @@
       if (p.has('cat')) p.delete('cat');
       if (isSearchPage && p.has('type')) p.delete('type');
       if (p.has('paged')) p.delete('paged');
+
       if (form) {
         var sInput = form.querySelector('input[name="s"]');
         if (sInput && sInput.value) p.set('s', sInput.value);
@@ -49,6 +67,7 @@
           p.set(inp.name, inp.value);
         });
       }
+
       var url = base + (p.toString() ? '?' + p.toString() : '');
       window.location.assign(url);
     });

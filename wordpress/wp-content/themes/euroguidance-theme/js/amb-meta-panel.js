@@ -37,3 +37,24 @@ if(typeof wp !== 'undefined') {
 
   registerPlugin('ambassador-meta-panel', { render: AmbMetaPanel });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".people .wp-block-post, .people li.wp-block-post").forEach(function(card){
+    var labelEl = card.querySelector(".spec-text strong") || card.querySelector(".spec-text");
+    if (!labelEl) return;
+
+    var specBlock = labelEl.closest(".spec-text");
+    var sib = specBlock ? specBlock.nextElementSibling : null;
+    var specList = null;
+    while (sib) {
+      if (sib.tagName === "UL") { specList = sib; break; }
+      sib = sib.nextElementSibling;
+    }
+    if (!specList) specList = card.querySelector("ul.bullet-meta-list--spec");
+
+    if (!specList) return;
+    var count = specList.querySelectorAll("li").length;
+
+    labelEl.textContent = (count === 1) ? "Спеціалізація:" : "Спеціалізації:";
+  });
+});

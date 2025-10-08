@@ -55,6 +55,7 @@
 	text-decoration: none;
 	box-shadow: 0px 1px 3px 0px #0000004D;
 	transition: box-shadow 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, transform .2s ease;
+	position: relative;
 
 	.thumbnail {
 		width: 64px;
@@ -114,4 +115,63 @@
 .file-card-editor .thumbnail-button:focus{
   outline:2px solid #2f8540;
   outline-offset:2px;
+}
+
+
+/* рядок з назвою + бейджем */
+.file-card__meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between; /* бейдж вправо */
+  gap:.5rem;
+  flex:1;           /* займає весь простір праворуч від іконки */
+  min-width:0;      /* щоб працював ellipsis */
+}
+
+/* щоб довгі назви не ламали макет */
+.file-card .file-title{
+  flex:1;
+  overflow:hidden;
+}
+
+/* бейдж */
+.badge-category{
+  display:inline-block;
+	background: #589d66;
+	border: 1px solid #2f8540;
+	color: #fff;
+	display: inline-block;
+	font-weight: 500;
+	line-height: 1;
+	padding: 6px 12px;
+	white-space: nowrap;
+}
+
+/* модифікатори під тип */
+.badge--file{
+  background:#589d66;   /* зелений відтінок */
+}
+.badge--link{
+  background:#326b8f;   /* синій відтінок */
+}
+/* Мобільний режим: бейдж фіксується внизу праворуч і стає компактнішим */
+@media (max-width: 600px){
+  .file-card__meta{
+    justify-content: flex-start; /* назва займе весь рядок */
+  }
+
+  .badge-category{
+    position: absolute;
+    right: max(5px, env(safe-area-inset-right));
+    bottom: max(5px, env(safe-area-inset-bottom));
+    z-index: 9999;
+    padding: 4px 10px;
+    font-size: 11px;
+    line-height: 1.1;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  .file-title {
+	padding-top: 20px;
+	padding-bottom: 20px;
+  }
 }

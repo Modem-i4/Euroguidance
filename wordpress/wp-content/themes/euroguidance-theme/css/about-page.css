@@ -46,6 +46,13 @@
   .about-page__features-row .test .about-page__feature-line-mob img {
     width:100% !important; height:auto !important; display:block; object-fit:contain;
   }
+
+	.about-page__fq-list-wrapper {
+		padding-right: 0 !important;
+	}
+	.about-page__fq-list-wrapper > ul {
+		padding-right: 1em !important;
+	}
 }
 
 .about-page__feature-line-mob {

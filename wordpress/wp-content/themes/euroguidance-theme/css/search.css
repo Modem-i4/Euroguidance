@@ -263,6 +263,9 @@ body.has-empty-search .search-title--empty { display:block !important; }
   .search-page-search .wp-block-categories .cat-item > a{
     padding: 0 5px;           /* бокові відступи */
   }
+  .search-col {
+    padding-top: 0 !important;
+  }
 
   .cat-item {
     width: 33%;

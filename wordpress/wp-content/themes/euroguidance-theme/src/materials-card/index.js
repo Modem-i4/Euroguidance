@@ -94,12 +94,24 @@ registerBlockType(metadata.name, {
   },
 
   save: ({ attributes }) => {
-    const { title, imageUrl, file } = attributes;
+    const { title, imageUrl, file, fileId, activeAttachment } = attributes;
     if (!file) return null;
+
+    const isLink = activeAttachment === 'link' || (!fileId && !!file);
+    const catLabel = isLink ? 'Лінк' : 'Файл';
+    const catMod   = isLink ? 'badge--link' : 'badge--file';
+
     return (
       <a href={file} target="_blank" rel="noopener noreferrer" className="file-card">
-        <img className="thumbnail" src={imageUrl ? imageUrl : '/wp-content/uploads/2025/08/tools-resume.svg'} alt="" />
-        {title && <div className="file-title">{title}</div>}
+        <img
+          className="thumbnail"
+          src={imageUrl ? imageUrl : '/wp-content/uploads/2025/09/Icon-4.svg'}
+          alt=""
+        />
+        <div className="file-card__meta">
+          {title && <div className="file-title">{title}</div>}
+          <span className={`badge-category ${catMod}`}>{catLabel}</span>
+        </div>
       </a>
     );
   },

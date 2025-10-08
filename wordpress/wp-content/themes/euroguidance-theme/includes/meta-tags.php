@@ -10,6 +10,7 @@ add_action('wp_head', function () {
         if (function_exists('mb_substr')) $desc = mb_substr($desc, 0, 156);
         else                             $desc = substr($desc, 0, 156);
         echo '<meta name="description" content="'. esc_attr($desc) .'">' . "\n";
+        echo '<meta name="og:description" content="'. esc_attr($desc) .'">' . "\n";
     }
 }, 5);
 
