@@ -1,12 +1,25 @@
-.inter-mobility__image{
+.inter-mobility__image {
     /* min-width: 422px; */
     /* width: 422px; */
+}
+.inter-mobility__column{
+    display: flex;
+    justify-content: center;
+}
+.inter-mobility__column-list ul {
+    display: flex;
+    flex-direction: column;
+    margin-block: 10px;
 }
 
 @media (max-width: 780px) {
 
-.inter-mobility__column-right{
-    display: flex;
-    justify-content: center;
+    .inter-mobility__column-right {
+        display: flex;
+        justify-content: center;
+    }
 }
+
+.test{
+    display: flex;
 }

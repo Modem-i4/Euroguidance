@@ -9,6 +9,12 @@ header {
 header .header__logo {
 	padding: 20px 0;
 }
+header ul.header__nav{
+	align-items: stretch;
+}
+header ul.header__nav li{
+}
+
 
 header .wp-block-navigation__container>.wp-block-navigation-submenu {
 	padding: 0;

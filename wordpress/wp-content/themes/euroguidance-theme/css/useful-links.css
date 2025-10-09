@@ -57,3 +57,9 @@ div.useful-link-card {
       width: 100%;
   }
 }
+
+
+.test{
+  margin: 0 !important;
+  /* padding: 0px; */
+}

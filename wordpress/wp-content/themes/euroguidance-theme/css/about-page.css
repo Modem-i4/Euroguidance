@@ -1,5 +1,5 @@
-.about-page__features-row {
-}
+.about-page__features-row {}
+
 
 .about-page__feature-line img {
 	height: 20px !important;
@@ -9,15 +9,18 @@
 	.about-page__feature-item img {
 		min-width: 72px !important;
 	}
+
 	.about-section__fq-img {
 		width: 31px !important;
 		min-width: 31px !important;
 	}
 }
+
 @media (max-width: 780px) {
 	.about-page__btn a {
 		padding: 21px 58px !important;
 	}
+
 	.about-page__feature-item {
 		width: 64px !important;
 		height: 64px !important;
@@ -26,34 +29,65 @@
 	.about-page__feature-line-desk {
 		display: none !important;
 	}
+
 	.about-page__feature-line-mob {
 		display: flex !important;
 		padding-bottom: 4px;
 	}
+
 	.about-section__fq-img {
 		width: 43.5px !important;
 		min-width: 43.5px !important;
 	}
+
 	.about-page__features-row {
 		gap: 0 !important;
 	}
 
-  .about-page__features-row { display:flex; align-items:center; gap:8px; }
-  .about-page__features-row > .test { flex:1 1 0; min-width:0; padding:0; }
-  .about-page__features-row .about-page__feature-line-desk { display:none; }
-  .about-page__features-row .about-page__feature-line-mob { display:block; }
-  .about-page__features-row .test figure { margin:0; }
-  .about-page__features-row .test .about-page__feature-line-mob img {
-    width:100% !important; height:auto !important; display:block; object-fit:contain;
-  }
+	.about-page__features-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.about-page__features-row>.test {
+		flex: 1 1 0;
+		min-width: 0;
+		padding: 0;
+	}
+
+	.about-page__features-row .about-page__feature-line-desk {
+		display: none;
+	}
+
+	.about-page__features-row .about-page__feature-line-mob {
+		display: block;
+	}
+
+	.about-page__features-row .test figure {
+		margin: 0;
+	}
+
+	.about-page__features-row .test .about-page__feature-line-mob img {
+		width: 100% !important;
+		height: auto !important;
+		display: block;
+		object-fit: contain;
+	}
 
 	.about-page__fq-list-wrapper {
-		padding-right: 0 !important;
+		padding: 0 !important;
 	}
-	.about-page__fq-list-wrapper > ul {
-		padding-right: 1em !important;
+
+	.about-page__fq-list-wrapper>ul {
+		padding: 32px 32px 32px 40px !important;
+	}
+
+	.about-page__fq-section__question {
+		gap: 10px !important;
 	}
 }
+
 
 .about-page__feature-line-mob {
 	display: none;
@@ -68,6 +102,7 @@
 		transform 0.15s ease,
 		box-shadow 0.15s ease;
 }
+
 .about-page__btn a:focus,
 .about-page__btn a:hover {
 	background-color: #ffdd31 !important;
