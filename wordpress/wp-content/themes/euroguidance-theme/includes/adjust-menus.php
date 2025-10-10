@@ -1,6 +1,8 @@
 <?php
 // ===== Disable comments admin-wide for THIS THEME only =====
 
+add_filter('autoptimize_filter_toolbar_show', '__return_false');
+
 // 1) Прибираємо підтримку коментарів/треκбеків у всіх типів записів
 add_action('init', function () {
 	foreach (get_post_types() as $pt) {

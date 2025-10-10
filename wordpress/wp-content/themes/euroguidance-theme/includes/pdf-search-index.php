@@ -12,6 +12,15 @@ function ntd_is_news_search_context(): bool {
     return false;
 }
 
+// виключення технічної сторінки пошуку
+add_action('pre_get_posts', function (WP_Query $q) {
+  if (is_admin() || !$q->is_main_query() || !$q->is_search()) return;
+  if ($p = get_page_by_path('search-2', OBJECT, 'page')) {
+    $q->set('post__not_in', array_unique(array_merge((array)$q->get('post__not_in'), [(int)$p->ID])));
+  }
+});
+
+
 /**
  * 1) Перенаправляємо кліки на посилання категорій у пошуку новин
  *    Замість архіву категорії -> на /news/?s=…&cat=…
